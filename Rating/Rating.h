@@ -8,6 +8,4 @@ class Rating{
    public:
       Rating(float i_score, std::string i_comment);
 };
-
-
 #endif

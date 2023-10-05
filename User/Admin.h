@@ -5,7 +5,6 @@
 class Admin : public User {
    public:
       Admin(std::string adUsername, std::string adPassword);
-      void viewAllMembers();
-      void viewAllMotorBikes();
+      friend class System;
 };
 #endif

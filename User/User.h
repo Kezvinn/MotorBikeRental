@@ -8,6 +8,7 @@ class User {
       std::string password;
    public:
       User (std::string username, std::string password);
+      friend class System;
 };
 
 #endif // USER_H
