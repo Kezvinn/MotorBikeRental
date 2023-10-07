@@ -7,7 +7,8 @@ class User {
       std::string username;
       std::string password;
    public:
-      User (std::string username, std::string password);
+      User();
+      User(std::string i_username, std::string i_password);
       friend class System;
 };
 

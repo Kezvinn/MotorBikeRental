@@ -2,9 +2,14 @@
 #define MEMBER_H
 #include <bits/stdc++.h>
 #include "User.h"
-std::string ID_TYPE {"CitizenID", "Passport"};
+#include "../Request/Request.h"
+
+
 #define INITIAL_MEM_RATING 10.0
 #define INITIAL_CREDITS 20
+
+std::string ID_TYPE {"CitizenID", "Passport"};
+
 class Member : public User {
    private:
       std::string fullname;
@@ -18,6 +23,7 @@ class Member : public User {
       int credits;
       bool ownBike;  
    public:
+      Member ();
       Member(std::string i_memberID, std::string i_memUsername, std::string i_memPassword,
              std::string i_fullname, std::string i_phoneNumber,
              std::string i_idType, std::string i_idNumber, std::string i_drvNumber,

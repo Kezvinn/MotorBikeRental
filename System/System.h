@@ -4,9 +4,10 @@
 #include "Member.h"
 #include "Admin.h"
 #include "MotorBike.h"
-#define MEMBER_FILE "Member.txt"
-#define BIKE_FILE "Bike.txt"
-#define ADMIN_FILE "Admin.txt"
+
+#define MEMBER_FILE "../Data/Member.txt"
+#define BIKE_FILE "../Data/Bike.txt"
+#define ADMIN_FILE "../Data/Admin.txt"
 class System {
    private:
       std::vector <Member*> memberVect;
