@@ -4,6 +4,9 @@ std::string bikeIDGenerate(){
    int num = rand() % 1001; //random number form 0-100
    return ("Bk-" + std::to_string(num));
 }
+MotorBike::MotorBike(){
+   std::cout << "Motorbike default constructor" << std::endl;
+};
 MotorBike::MotorBike(std::string i_bikeID, std::string i_model, std::string i_color,
                      int i_engineSize, std::string i_mode, std::string i_yearMade,
                      float i_bikeRating, int i_rentPrice, std::string i_location,

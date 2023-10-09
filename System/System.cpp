@@ -1,6 +1,11 @@
 #include "System.h"
+// #include "../User/Member.h"
+// #include "../User/Admin.h"
+// #include "../Bike/MotorBike.h"
 
-System::System(){};
+System::System(){
+   std::cout << "Default System Configuration" << std::endl;
+};
 void System::mainMenu(){
    std::cout << "=====================================================" << std::endl;
    std::cout << "              MOTORBIKE RENTAL APPLICATION           " << std::endl;
@@ -96,12 +101,12 @@ void System::adminLoginMenu(){
    case 1:
       loadAdmin();   
       std::cout << "Enter Admin Username: ";
-      std::getline(std::cin, username);
-      // std::cin >> username;
-      // std::cin.ignore(0,' ');
+      // std::getline(std::cin, username);
+      std::cin >> username;
+      std::cin.ignore(0,' ');
       std::cout << "Enter Admin Password: ";
-      // std::cin >> password;
-      std::getline(std::cin, password);
+      std::cin >> password;
+      // std::getline(std::cin, password);
       if (adminLogin(username,password)) {
          std::cout << "Login successfully!" <<std::endl;
          adminMenu();
@@ -187,29 +192,6 @@ void System::memberMenu(){
       break;
    }
 }
-void System::guestMenu(){
-   std::cout << "===========================================" << std::endl;
-   std::cout << "|               -Guest Menu-              |" << std::endl;
-   std::cout << "===========================================" << std::endl;
-   // loadMembers();
-   // loadBikes();
-   // loadAdmin();
-   std::cout << "1. View motorbike\n";
-   std::cout << "2. Sign up\n";
-   std::cout << "3. Exit the program\n";
-
-   int choice = menuChoice(1,3);
-   switch (choice){
-      case 1:
-         guestViewBikes();
-         break;
-      case 2:
-         guestRegister();
-         break;
-      case 3:
-         break;
-   }
-}
 
 void System::loadMembers(){
    memberVect.clear();
@@ -267,6 +249,53 @@ void System::loadAdmin(){
 
    std::cout << "Admin file loaded" << std::endl;
    file.close();
+}
+
+void System::saveBikesToFile(){
+   std::ofstream file {BIKE_FILE};
+   if (!file ){
+      std::cerr << "Couldn't open motorbike file" << std::endl;
+      return;
+   }
+   for(auto bike : bikeVect){
+      file << bike->bikeID << "|" << bike->model << "|"
+           << bike->color << "|" << bike->engineSize << "|"
+           << bike->mode << "|" << bike->yearMade << "|"
+           << bike->bikeRating << "|" << bike->rentPrice << "|"
+           << bike->location << "|" << bike->memRating << "|"
+           << bike->status << "|" << bike->rentDuration << "|"
+           << bike->description << std::endl;
+   }
+   file.close();
+   std::cout << "Motorbike file saved successfully!" << std::endl;
+}
+void System::saveMemberToFile(){
+   std::ofstream file{MEMBER_FILE};
+   if (!file){
+      std::cerr<< "Couln't open member file" <<std::endl;
+      return;
+   }
+   for (auto mem:memberVect){
+      file << mem->memberID << "|" << mem->username << "|"
+           << mem->password << "|" << mem->fullName << "|"
+           << mem->phoneNumber << "|" << mem->idType << "|"
+           << mem->idNumber << "|" << mem->drvNumber << "|"
+           << mem->expDate << "|" << mem->memRating << "|"
+           << mem->credits << "|";
+      if (currentMember != nullptr) {
+         if(mem->memberID == currentMember->memberID && currentMember->ownBike == true) {
+            file << "|" << currentMember->ownBikeID;
+         }
+         else {
+            file << "|" << mem->ownBikeID;
+         }
+      } else {
+         file << "|" << mem->ownBikeID;
+      }
+      file << "\n";
+   }
+   file.close();
+   std::cout << "Members file saved successfully!" << std::endl;
 }
 
 void System::guestViewBikes(){
@@ -453,7 +482,7 @@ void System::adminViewMembers(){
    for (auto mem : memberVect) {
       std::cout << std::left << std::setw(13) << index
                 << std::left << std::setw(13) << mem->memberID
-                << std::left << std::setw(15) << mem->fullname << std::endl;
+                << std::left << std::setw(15) << mem->fullName << std::endl;
       index++;
    }
    std::cout << std::endl;
@@ -478,7 +507,7 @@ void System::adminViewMembers(){
                    << std::left << std::setw(15) << mem->memberID
                    << std::left << std::setw(15) << mem->username
                    << std::left << std::setw(15) << mem->password
-                   << std::left << std::setw(15) << mem->fullname
+                   << std::left << std::setw(15) << mem->fullName
                    << std::left << std::setw(15) << mem->phoneNumber
                    << std::left << std::setw(15) << mem->idType
                    << std::left << std::setw(15) << mem->idNumber
@@ -517,6 +546,32 @@ int menuChoice(int start, int end) {
       }
    } while (!flag);
    return finalChoice;
+};
+int menuChoice(int start, int end,std::vector<int> track) { 
+   int finalChoice;
+   bool flag;
+   std::string tempo;
+   do{
+      std::cout << "Enter your bike choice: ";
+      std::cin >> tempo;
+      if (numValid(tempo)){   //check if the input is number
+         std::cout <<"Only enter number as choice! Try again!"<<std::endl;
+         flag = false;
+         continue;
+      }
+      finalChoice = std::stoi(tempo);
+      for (int i = 0; i < track.size(); i++) {
+         if (finalChoice > end || finalChoice < start) {
+            std::cout << "Enter choice in the range " << start << " - " << end << " only!" << std::endl;
+            flag = false;
+         }
+         else
+         {
+            flag = true;
+         }
+      }
+   } while (!flag);
+   return track[finalChoice];
 };
 //-------------------Validate input for system---------------------
 bool numValid(std::string s){

@@ -1,9 +1,10 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 #include <bits/stdc++.h>
-#include "Member.h"
-#include "Admin.h"
-#include "MotorBike.h"
+
+#include "../User/Member.h"
+#include "../User/Admin.h"
+#include "../Bike/MotorBike.h"
 
 #define MEMBER_FILE "../Data/Member.txt"
 #define BIKE_FILE "../Data/Bike.txt"
@@ -37,17 +38,17 @@ class System {
       bool memberLogin(std::string userName, std::string password);
       void memberMenu();
       
-
-      void guestMenu();
       void guestViewBikes();
       void guestRegister();
 
+      void saveMemberToFile();
+      void saveBikesToFile();
       
 };
 std::vector<std::string> splitString(std::string &input, char delimiter);
 std::string stringCut(std::string &s);
 int menuChoice(int start, int end);
-
+int menuChoice(int start, int end, std::vector<int> track);
 bool numValid(std::string s);
 bool isPhoneNum(std::string s);  // first 0, 10 char, all num
 bool isPassword(std::string s);  // min length 8 char, no space
