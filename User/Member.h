@@ -2,12 +2,11 @@
 #define MEMBER_H
 #include <bits/stdc++.h>
 #include "User.h"
-// #include "../Request/Request.h"
 
 #define INITIAL_MEM_RATING 10.0
 #define INITIAL_CREDITS 20
 
-std::string static ID_TYPE {"CitizenID", "Passport"};
+std::string static ID_TYPE[3] = {"CitizenID", "Passport"};
 
 class Member : public User {
    private:
@@ -20,7 +19,7 @@ class Member : public User {
       float memRating;
       std::string memberID; //auto-generated
       int credits;
-      bool ownBike;  
+      bool ownBike = false;  
       std::string ownBikeID;
    public:
       Member();

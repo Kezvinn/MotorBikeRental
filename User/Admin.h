@@ -2,7 +2,6 @@
 #define ADMIN_H
 #include <bits/stdc++.h> 
 #include "User.h"
-// #include "../System/System.h"
 class Admin : public User {
    public:
       Admin();

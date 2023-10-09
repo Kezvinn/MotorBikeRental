@@ -538,7 +538,7 @@ int menuChoice(int start, int end) {
          continue;
       }
       finalChoice = std::stoi(tempo);
-      if (finalChoice >= end || finalChoice <= start){  //check if the input is in range
+      if (finalChoice > end || finalChoice < start){  //check if the input is in range
          std::cout << "Enter choice in the range " << start << " - " << end << " only!" << std::endl;
          flag = false;
       } else {
