@@ -20,13 +20,14 @@ class Member : public User {
       std::string memberID; //auto-generated
       int credits;
       bool ownBike = false;  
-      std::string ownBikeID;
+      std::string ownBikeID = "null";
    public:
       Member();
       Member(std::string i_memberID, std::string i_memUsername, std::string i_memPassword,
              std::string i_fullname, std::string i_phoneNumber,
              std::string i_idType, std::string i_idNumber, std::string i_drvNumber,
-             std::string i_expDate, float i_memRating, int i_credits);
+             std::string i_expDate, float i_memRating, int i_credits,
+             bool i_ownBike, std::string i_ownBikeID);
       void showMemberInfo();
       friend class System;
 };

@@ -1,7 +1,7 @@
 #ifndef MOTORBIKE_H
 #define MOTORBIKE_H
 #include <bits/stdc++.h>
-std::string static LOCATION[3] = {"Hanoi", "Danang", "Saigon"};
+std::string static LOCATION[3] = {"HN", "DN", "SG"};
 std::string static BIKE_STATUS[2] = {"Available", "Unavailable"};
 std::string static MODE[3] = {"Auto", "Manual", "Semi"};
 class MotorBike{
