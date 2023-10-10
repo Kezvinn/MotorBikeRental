@@ -6,17 +6,17 @@
 #include "../User/Admin.h"
 #include "../Bike/MotorBike.h"
 
-#define MEMBER_FILE "../Data/Member.txt"
-#define BIKE_FILE "../Data/Bike.txt"
-#define ADMIN_FILE "../Data/Admin.txt"
+#define MEMBER_FILE "Data/Member.txt"
+#define BIKE_FILE "Data/Bike.txt"
+#define ADMIN_FILE "Data/Admin.txt"
 class System {
    private:
       std::vector <Member*> memberVect;
       std::vector <MotorBike*> bikeVect;
 
       Admin *admin;
-      Member *currentMember;  //pointer to current member
-      MotorBike *currentBike; //pointer to current motorbike
+      Member *currentMember = nullptr;  //pointer to current member
+      MotorBike *currentBike = nullptr; //pointer to current motorbike
    public:
       System();
 
@@ -43,12 +43,16 @@ class System {
 
       void saveMemberToFile();
       void saveBikesToFile();
+
+      void rentMenu();
       
 };
 std::vector<std::string> splitString(std::string &input, char delimiter);
 std::string stringCut(std::string &s);
+
 int menuChoice(int start, int end);
 int menuChoice(int start, int end, std::vector<int> track);
+
 bool numValid(std::string s);
 bool isPhoneNum(std::string s);  // first 0, 10 char, all num
 bool isPassword(std::string s);  // min length 8 char, no space

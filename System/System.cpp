@@ -1,17 +1,16 @@
 #include "System.h"
-// #include "../User/Member.h"
-// #include "../User/Admin.h"
-// #include "../Bike/MotorBike.h"
 
 System::System(){
-   std::cout << "Default System Configuration" << std::endl;
+   // std::cout << "Default System Configuration" << std::endl;
 };
 void System::mainMenu(){
    std::cout << "=====================================================" << std::endl;
-   std::cout << "              MOTORBIKE RENTAL APPLICATION           " << std::endl;
-   std::cout << "Creator: Nhat Nguyen" << std::endl;
-   std::cout << "Use the app as: 1.Guest\t2.Member\t3.Admin" << std::endl; 
+   std::cout << "|             MOTORBIKE RENTAL APPLICATION          |" << std::endl;
    std::cout << "=====================================================" << std::endl;
+   
+   std::cout << "Creator: Nhat Nguyen" << std::endl;
+   std::cout << "Use the app as:" << std::endl; 
+   std::cout << "1. Guest\t2. Member\t3. Admin" << std::endl; 
    int choice = menuChoice(1,3);
    switch (choice){
       case 1:
@@ -23,44 +22,50 @@ void System::mainMenu(){
       case 3:
          adminLoginMenu();
          break;
+      case 4: 
+         std::cout << "=====================================================" << std::endl;
+         std::cout << "|                THANK YOU FOR USING!               |" << std::endl;
+         std::cout << "=====================================================" << std::endl;
+   
    }
 }
 
 void System::guestMenu(){
-   std::cout << "===========================================" << std::endl;
-   std::cout << "|               -Guest Menu-              |" << std::endl;
-   std::cout << "===========================================" << std::endl;
-   // loadMembers();
-   // loadBikes();
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                    -GUEST MENU-                   |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+
+   loadMembers();
+   loadBikes();
    // loadAdmin();
    std::cout << "1. View motorbike\n";
    std::cout << "2. Sign up\n";
    std::cout << "3. Return to main menu\n";
-
    int choice = menuChoice(1,3);
+   // std::cin.ignore(0,' ');
    switch (choice){
       case 1:
          guestViewBikes();
          break;
       case 2:
          guestRegister();
+         saveMemberToFile();
          break;
       case 3:
          mainMenu();
-         // saveMembertoFile();
-         // saveBiketoFile();
+         saveMemberToFile();
+         saveBikesToFile();
          break;
    }
 }
 void System::memberLoginMenu(){
    std::string username, password;
-   std::cout << "===========================================" << std::endl;
-   std::cout << "|               -Member Menu-             |" << std::endl;
-   std::cout << "===========================================" << std::endl;
-   std::cout << "1. Member Login" <<std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                    -MEMBER MENU-                  |" << std::endl;
+   std::cout << "=====================================================" << std::endl;   std::cout << "1. Member Login" <<std::endl;
    std::cout << "2. Back to main menu" << std::endl;
-   // loadMembers();
-   // loadBikes();
+   loadMembers();
+   loadBikes();
    // loadAdmin();
    int choice;
    choice = menuChoice(1,2);
@@ -86,12 +91,10 @@ void System::memberLoginMenu(){
 }
 void System::adminLoginMenu(){
  std::string username, password;
-   std::cout << "===========================================" << std::endl;
-   std::cout << "|               -Admin Menu-              |" << std::endl;
-   std::cout << "===========================================" << std::endl;
-   std::cout << "1. Admin Login" <<std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                    -ADMIN MENU-                   |" << std::endl;
+   std::cout << "=====================================================" << std::endl;   std::cout << "1. Admin Login" <<std::endl;
    std::cout << "2. Back to main menu" << std::endl;
-   std::cout << "===========================================" << std::endl;
    // loadMembers();
    // loadBikes();
    // loadAdmin();
@@ -139,9 +142,10 @@ bool System::memberLogin(std::string username, std::string password){
 }
 
 void System::adminMenu(){
-   std::cout << "===========================================" << std::endl;
-   std::cout << "|                -Admin Menu-             |" << std::endl;
-   std::cout << "===========================================" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                     -ADMIN MENU-                  |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+
    std::cout << "1. View all members" <<std::endl; 
    std::cout << "2. View all motorbikes" <<std::endl;
    std::cout << "3. Logout" << std::endl;
@@ -157,13 +161,17 @@ void System::adminMenu(){
       adminViewBikes();
       break;
    case 3:
+      std::cout << "=====================================================" << std::endl;
+      std::cout << "|                -LOGOUT SUCCESSFULLY-              |" << std::endl;
+      std::cout << "=====================================================" << std::endl;
+
       break;
    }
 }
 void System::memberMenu(){
-   std::cout << "===========================================" << std::endl;
-   std::cout << "|              -Member Menu-               |" << std::endl;
-   std::cout << "===========================================" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                    -MEMBER MENU-                  |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
    std::cout << "1. Rent Motorbikes" << std::endl; //view bike to rent
    std::cout << "2. Add motorbike" << std::endl;   // addbike to member
    std::cout << "3. List/Unlist motorbikes" << std::endl; //list or unlist motorbikes
@@ -188,7 +196,9 @@ void System::memberMenu(){
       //view history
       break;
    case 6:
-      //logout
+      std::cout << "=====================================================" << std::endl;
+      std::cout << "|                 -THANK YOU FOR USING-             |" << std::endl;
+      std::cout << "=====================================================" << std::endl;
       break;
    }
 }
@@ -199,6 +209,7 @@ void System::loadMembers(){
    std::ifstream file{MEMBER_FILE}; 
    if(!file.is_open()){
       std::cerr << "Couldn't open 'Member.txt'" << std::endl;
+      // return;
    }
    while (std::getline(file, line)){      
       std::vector<std::string> dataList;
@@ -219,15 +230,17 @@ void System::loadBikes(){
    std::ifstream file{BIKE_FILE}; 
    if(!file.is_open()){
       std::cerr << "Couldn't open 'Bike.txt'" << std::endl;
+      // return;
    }
    while (std::getline(file, line)){      
       std::vector<std::string> dataList;
       dataList = splitString (line, '|');
+
       MotorBike *bike = new MotorBike(dataList[0], dataList[1], dataList[2],
                                       std::stoi(dataList[3]), dataList[4], dataList[5],
                                       std::stof(dataList[6]), std::stoi(dataList[7]), dataList[8],
                                       std::stof(dataList[9]), dataList[10], std::stoi(dataList[11]),
-                                      dataList[0]);
+                                      dataList[12]);
       bikeVect.push_back(bike);
    }
    file.close();  
@@ -236,7 +249,8 @@ void System::loadBikes(){
 void System::loadAdmin(){
    std::ifstream file{ADMIN_FILE};
    if (!file) {
-      std::cerr << "Cant open file Admin" << std::endl;
+      std::cerr << "Cant open file 'Admin.txt'" << std::endl;
+      // return;
    }
    std::string line;
    getline(file, line);
@@ -275,14 +289,14 @@ void System::saveMemberToFile(){
       std::cerr<< "Couln't open member file" <<std::endl;
       return;
    }
-   for (auto mem:memberVect){
+   for (auto mem : memberVect) {
       file << mem->memberID << "|" << mem->username << "|"
            << mem->password << "|" << mem->fullName << "|"
            << mem->phoneNumber << "|" << mem->idType << "|"
            << mem->idNumber << "|" << mem->drvNumber << "|"
            << mem->expDate << "|" << mem->memRating << "|"
            << mem->credits << "|";
-      if (currentMember != nullptr) {
+      if (currentMember != nullptr) {  
          if(mem->memberID == currentMember->memberID && currentMember->ownBike == true) {
             file << "|" << currentMember->ownBikeID;
          }
@@ -341,65 +355,76 @@ void System::guestRegister(){
        exptdate;
    float memrating = INITIAL_MEM_RATING;
    int credits = INITIAL_CREDITS;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                 -MEMBER REGISTRATION-             |" <<std::endl;
+   std::cout << "=====================================================" << std::endl;
+   // std::cin.ignore(0,' ');
+   std::cin.ignore();
    do{
-      std::cout << "=====================================================" << std::endl;
       std::cout << "Format: 6 char minimum. No whitespaces. No symbols (&=_'-+,<>.)" << std::endl;
-      std::cout << "Enter your username: ";
+      std::cout << "1. Enter your username: ";
       std::getline(std::cin, username);
+      std::cout << "=====================================================" << std::endl;
    }while (!isUsername(username));
+   
    do {
-      std::cout << "=====================================================" << std::endl;
       std::cout << "Format: length of 8 - 15. Included: one Uppercase. one Number, one Special Character" <<std::endl;
-      std::cout << "Enter your password: ";
+      std::cout << "2. Enter your password: ";
       std::getline(std::cin, password);
+      std::cout << "=====================================================" << std::endl;
    } while (!isPassword(password));
+   
    do {
-      std::cout << "=====================================================" << std::endl;
-      std::cout << "Format: no symbpls, no numbers" << std::endl;
-      std::cout << "Enter your fullname: " << password << std::endl;
+      std::cout << "Format: no symbols, no numbers" << std::endl;
+      std::cout << "3. Enter your fullname: " ;
       std::getline(std::cin, fullname);
-   } while (!isFullname(fullname));
-   do {
       std::cout << "=====================================================" << std::endl;
+   } while (!isFullname(fullname));
+
+   do {
       std::cout << "Format: 10 numbers, no characters, no symbols" << std::endl;
-      std::cout << "Enter your phonenumber: " << password << std::endl;
+      std::cout << "4. Enter your phonenumber: ";
       std::getline(std::cin, phonenumber);
+      std::cout << "=====================================================" << std::endl;
    } while (!isPhoneNum(phonenumber));
    
-   std::cout << "Choose your ID type: 1. CitizenID\t2. PassportID" <<std::endl;
+   std::cout << "5. Choose your ID type: 1. CitizenID\t2. PassportID" <<std::endl;
    int choice1 = menuChoice(1,2);
+   std::cout << "=====================================================" << std::endl;
    switch (choice1) {
    case 1:
       idtype = ID_TYPE[0]; //citizens ID 12
+      std::cin.ignore();
       do {
-         std::cout << "=====================================================" << std::endl;
          std::cout << "Format: 12 numbers, no characters, no symbols" << std::endl;
-         std::cout << "Enter your ID#: " << password << std::endl;
+         std::cout << "6. Enter your ID#: " ;
          std::getline(std::cin, idnumber);
+         std::cout << "=====================================================" << std::endl;
       } while (!isIDValid(idnumber,1));
       break;
    case 2:
       idtype = ID_TYPE[1];    //passport ID 8
+      std::cin.ignore();
       do {
-         std::cout << "=====================================================" << std::endl;
          std::cout << "Format: 8 numbers, no characters, no symbols" << std::endl;
-         std::cout << "Enter your ID#: " << password << std::endl;
+         std::cout << "6. Enter your ID#: " ;
          std::getline(std::cin, idnumber);
+         std::cout << "=====================================================" << std::endl;
       } while (!isIDValid(idnumber,2));
       break;
    }
    do {
-      std::cout << "=====================================================" << std::endl;
       std::cout << "Format: 12 numbers, no characters, no symbols" << std::endl;
-      std::cout << "Enter your driver license ID: " << password << std::endl;
+      std::cout << "7. Enter your driver license ID: ";
       std::getline(std::cin, drivernumber);
+      std::cout << "=====================================================" << std::endl;
    } while (!isLicence(drivernumber));
 
    do {
-      std::cout << "=====================================================" << std::endl;
       std::cout << "Format: DD/MM/YYYY" << std::endl;
-      std::cout << "Enter license expiration date: " << password << std::endl;
+      std::cout << "8. Enter license expiration date: ";
       std::getline(std::cin, exptdate);
+      std::cout << "=====================================================" << std::endl;
    } while (!isDateFormat(exptdate));
    memID = memIDGenerate();
    Member *mem = new Member(memID, username, password,
@@ -408,14 +433,15 @@ void System::guestRegister(){
                             exptdate, memrating, credits);
    memberVect.push_back(mem);
    std::cout << "=====================================================" << std::endl;
-   std::cout << "|                Register Successfully              |" << std::endl;
+   std::cout << "|               -REGISTER SUCCESSFULLY-             |" << std::endl;
    std::cout << "=====================================================" << std::endl;
    mem->showMemberInfo();  //show member information
+
 }
 
 void System::adminViewBikes(){
+   loadBikes();
    int index = 1;
-   loadBikes();  
    
    std::cout << "Motorbikes in the System" << std::endl;
    std::cout << std::left << std::setw(10) << "-Index- "
@@ -445,7 +471,7 @@ void System::adminViewBikes(){
                    << std::left << std::setw(15) << "-Credits-"
                    << std::left << std::setw(15) << "-Bike Rating-"
                    << std::left << std::setw(15) << "-Member Rating-"
-                   << std::left << std::setw(25) << "-Descripton-"
+                   << std::left << std::setw(30) << "-Descripton-"
                    << std::endl;
          for(auto bike: bikeVect){
             std::cout << std::left << std::setw(10) << index
@@ -458,7 +484,7 @@ void System::adminViewBikes(){
                    << std::left << std::setw(15) << bike->rentPrice
                    << std::left << std::setw(15) << bike->bikeRating
                    << std::left << std::setw(15) << bike->memRating
-                   << std::left << std::setw(25) << bike->description
+                   << std::left << std::setw(30) << bike->description
                    << std::endl;
             index++;
          }
@@ -518,13 +544,98 @@ void System::adminViewMembers(){
          std::cout << "Total members: " << memberVect.size()<< std::endl;
          std::cout << "Return to admin menu "<< std::endl;
          adminMenu();
-      break;
+         break;
       case 2:
          adminMenu();
          break;
    }
 }
 
+void System::rentMenu(){
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                     -RENT MENU-                   |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "Choose your location:\t1. Hanoi\t2. Danang\t3. Saigon\n";
+   int index = 0;
+   int choice = menuChoice(1,3);
+   std::cout << "=====================================================" << std::endl;
+   std::cout << std::left << std::setw(10) << "-Index- "
+             << std::left << std::setw(15) << "-Bike ID-"
+             << std::left << std::setw(15) << "-Model-"
+             << std::left << std::setw(15) << "-Color-"
+             << std::left << std::setw(15) << "-Year Made-"
+             << std::left << std::setw(15) << "-Mode-"
+             << std::left << std::setw(15) << "-Location-"
+             << std::left << std::setw(15) << "-Credits-"
+             << std::left << std::setw(15) << "-Bike Rating-"
+             << std::left << std::setw(15) << "-Member Rating-"
+             << std::left << std::setw(25) << "-Descripton-"
+             << std::endl;
+   switch (choice) {
+      case 1:
+         for(MotorBike *bike: bikeVect){
+            if (bike->location == LOCATION[0]){  //HN
+               std::cout << std::left << std::setw(10) << index
+                         << std::left << std::setw(15) << bike->bikeID
+                         << std::left << std::setw(15) << bike->model
+                         << std::left << std::setw(15) << bike->color
+                         << std::left << std::setw(15) << bike->yearMade
+                         << std::left << std::setw(15) << bike->mode
+                         << std::left << std::setw(15) << bike->location
+                         << std::left << std::setw(15) << bike->rentPrice
+                         << std::left << std::setw(15) << bike->bikeRating
+                         << std::left << std::setw(15) << bike->memRating
+                         << std::left << std::setw(25) << bike->description
+                         << std::endl;
+            }
+         index++;
+         }
+         std::cout << "=====================================================" << std::endl;
+         break;
+      case 2:
+         for(MotorBike *bike: bikeVect){
+               if (bike->location == LOCATION[1]){  //DN
+               std::cout << std::left << std::setw(10) << index
+                         << std::left << std::setw(15) << bike->bikeID
+                         << std::left << std::setw(15) << bike->model
+                         << std::left << std::setw(15) << bike->color
+                         << std::left << std::setw(15) << bike->yearMade
+                         << std::left << std::setw(15) << bike->mode
+                         << std::left << std::setw(15) << bike->location
+                         << std::left << std::setw(15) << bike->rentPrice
+                         << std::left << std::setw(15) << bike->bikeRating
+                         << std::left << std::setw(15) << bike->memRating
+                         << std::left << std::setw(25) << bike->description
+                         << std::endl;
+               }
+            index++;
+         }
+         std::cout << "=====================================================" << std::endl;
+         break;
+      case 3:
+         for(MotorBike *bike: bikeVect){
+            if (bike->location == LOCATION[2]){  //SG
+               std::cout << std::left << std::setw(10) << index
+                         << std::left << std::setw(15) << bike->bikeID
+                         << std::left << std::setw(15) << bike->model
+                         << std::left << std::setw(15) << bike->color
+                         << std::left << std::setw(15) << bike->yearMade
+                         << std::left << std::setw(15) << bike->mode
+                         << std::left << std::setw(15) << bike->location
+                         << std::left << std::setw(15) << bike->rentPrice
+                         << std::left << std::setw(15) << bike->bikeRating
+                         << std::left << std::setw(15) << bike->memRating
+                         << std::left << std::setw(25) << bike->description
+                         << std::endl;
+            }
+         index++;
+         }
+         std::cout << "=====================================================" << std::endl;
+         break;
+      } 
+   
+}
+//-------------------Debug Functions--------------------------------
 int menuChoice(int start, int end) {
    int finalChoice;
    bool flag;
@@ -554,6 +665,7 @@ int menuChoice(int start, int end,std::vector<int> track) {
    do{
       std::cout << "Enter your bike choice: ";
       std::cin >> tempo;
+      // std::cin.ignore();
       if (numValid(tempo)){   //check if the input is number
          std::cout <<"Only enter number as choice! Try again!"<<std::endl;
          flag = false;
@@ -604,13 +716,19 @@ bool isPassword(std::string s){    // min length 8 char, no space
 }
 bool isUsername(std::string s){// no symbol, space, min length 6
    if (s.length() < 6){    // min length > 6
+      // std::cout << "too short" << std::endl;
       return false; 
    }
    std::regex reg ("^[&=_'-+,<>. ]+$"); //doesnt include those symbols (&=_'-+,<>.)
-   if (!std::regex_match(s, reg)){return false;}
+   if (std::regex_match(s, reg)){
+      // std::cout << "Cant have these symbols" << std::endl;
+      return false;
+   }
    for (int i = 0; i < s.length(); i++) {
-      if (s[i] == ' ')  // no whitespace
+      if (s[i] == ' ') { // no whitespace
+         // std::cout << "No whitespace" << std::endl;
          return false;
+      }
    }
    return true;
 }  
@@ -623,41 +741,57 @@ bool isFullname(std::string s){// no symbol, number,
    return true;
 }  
 bool isDateFormat(std::string s){   // DD/MM/YYYY
+   if ((s.length() != 10) || (s[2] != '/' || s[5] != '/')){ // format check DD/MM/YYYY
+      std::cerr << "Invalid format string. Must follow format DD/MM/YYYY." << std::endl;
+      return false;
+   }
+   
    std::string date = s.substr(0,2);
    std::string month = s.substr(3,2);
    std::string year = s.substr(6,4);
-   for (int i = 0; i < s.length(); i++) {
-      if (i == 2 || i == 5) {
-         if (s[i] != '/') {
-            std::cerr << "Invalid date. Must follow format DD/MM/YYYY" << std::endl;
+   // std::cout << "day: " << date << " month: "  << month << " year: " << year << std::endl;
+   
+   if (std::stoi(month) == 2){   // leap year 
+      if (std::stoi(year) % 4 == 0){
+         if (std::stoi(date) > 29) {
+            std::cerr << "Invalid date. Leap year. February only have 29 days!" << std::endl;
             return false;
-         }
+         }  
+      } else {
+         if (std::stoi(date) > 28) {
+            std::cerr << "Invalid date. Not a leap year. February only have 28 days!" << std::endl;
+            return false;
+         } 
       }
+
    }
-   for (int i = 1; i < 12; i+2) {  //1,3,5,7,9,11
-      if (std::stoi(date) > 31){   //less than 31 days
-         std::cerr << "Month: " << i << " only have 31 days" << std::endl;
-         return false;
-      }
-   }
-   for (int i = 0; i < 13; i+2) {   //2,4,6,8,10,12
-      if (i == 2 && std::stoi(date) > 28) {  //Feb only have 28 days
-         std::cerr << "Month: " << i << " only have 28 days" << std::endl;
-         return false;
-      }
-      if(std::stoi(date) > 30) {   //less than 30 days
-         std::cerr << "Month: " << i << " only have 30 days" << std::endl;
-         return false;
-      }
-   }
-   if (std::stoi(month) > 12) {  //month check
-      std::cerr << "Invalid month" << std::endl;
+
+
+
+   if (std::stoi(year) < 2023){  //year check
+      std::cerr << "License expired" << std::endl;
+      return false;
+   } 
+
+   if (std::stoi(month) > 12 || std::stoi(month) < 0){   //month check
+      std::cerr << "Invalid Month. Only 1-12" << std::endl;
       return false;
    }
-   if (std::stoi(year) < 2023) { //year check
-      std::cerr << "Invalid Year, License Expired" << std::endl;
-      return false;
+
+   for (int m : {1,3,5,7,8,10,12}) {   //date check
+      if (std::stoi(month) == m && std::stoi(date) > 31){
+         std::cerr << "Invalid date. Month " << month  << " only have 31 days" << std::endl;
+         return false;
+      }
    }
+   for (int m : {2, 4, 6, 9, 11}) {
+      if (std::stoi(month) == m && std::stoi(date) > 30){
+         std::cerr << "Invalid date. Month " << month  << " only have 30 days" << std::endl;
+         return false;
+      }
+   }
+   
+
    return true;
 }       
 bool isLicence(std::string s){// 12 number, no space or symbol

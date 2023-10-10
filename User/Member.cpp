@@ -19,11 +19,11 @@ Member::Member(std::string i_memberID, std::string i_memUsername, std::string i_
       expDate(i_expDate), memRating(i_memRating), credits(i_credits){};
 
 void Member::showMemberInfo(){
-   std::cout << "================================================================" <<std::endl;
+   std::cout << "=====================================================" << std::endl;
    std::cout << "Fullname: " << fullName << "\tPhone#: " << phoneNumber << std::endl;
    std::cout << "ID type: " << idType << "\tID#: " << idNumber << std::endl;
-   std::cout << "Driver Liscense #: " << drvNumber << "\tExp. date: " << expDate <<std::endl;
+   std::cout << "Drv License #: " << drvNumber << "\tExp. date: " << expDate <<std::endl;
    std::cout << "Rating: " <<memRating<<std::endl;
    std::cout << "Credits: " << credits << std::endl;
-   std::cout << "================================================================" <<std::endl;
+   std::cout << "=====================================================" << std::endl;
 }
