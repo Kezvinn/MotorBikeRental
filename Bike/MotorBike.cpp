@@ -19,12 +19,12 @@ MotorBike::MotorBike(std::string i_bikeID, std::string i_model, std::string i_co
       description(i_description){};
 
 void MotorBike::showBikeInfo(){  //use to display after user added a new bike
-   std::cout << "========================================================" << std::endl;
-   std::cout << "Model: "  << model << "\tColor: " << color << std::endl;
-   std::cout << "Engine Size: " << engineSize << "\tMode: " << mode << std::endl;
-   std::cout << "Year Made: " << yearMade << "\tLocation: " <<location<<std::endl;
-   std::cout << "Rent Price: " << rentPrice << "\tBike Rating: " << bikeRating << std::endl;
-   std::cout << "Member Rating: " << memRating << "\tStatus: " <<status << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "Model: "  << model << "\t\tColor: " << color << std::endl;
+   std::cout << "Engine Size: " << engineSize << "\t\tMode: " << mode << std::endl;
+   std::cout << "Year Made: " << yearMade << "\t\tLocation: " <<location<<std::endl;
+   std::cout << "Rent Price: " << rentPrice << "\t\tBike Rating: " << bikeRating << std::endl;
+   std::cout << "Member Rating: " << memRating << "\t\tStatus: " <<status << std::endl;
    std::cout << "Description: " << description << std::endl;
-   std::cout << "========================================================" << std::endl;
+   std::cout << "=====================================================" << std::endl;
 }

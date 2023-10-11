@@ -193,13 +193,14 @@ void System::memberMenu(){
       break;
    case 4:  
       //view request
+      currentMember->viewRequest(); 
       break;
    case 5:
       //view history
       break;
    case 6:
       std::cout << "=====================================================" << std::endl;
-      std::cout << "|                 -THANK YOU FOR USING-             |" << std::endl;
+      std::cout << "|               -THANK YOU FOR USING-               |" << std::endl;
       std::cout << "=====================================================" << std::endl;
       break;
    }
@@ -221,7 +222,7 @@ void System::loadMembers(){
                                   dataList[3], dataList[4],
                                   dataList[5], dataList[6], dataList[7],
                                   dataList[8], std::stof(dataList[9]), std::stoi(dataList[10]),
-                                  std::stoi(dataList[11]), dataList[12]); // add attributes
+                                  std::stoi(dataList[11]), dataList[12],dataList[13]); // add attributes
       memberVect.push_back(member);
    }
    file.close();  
@@ -364,7 +365,7 @@ void System::guestRegister(){
    std::string memID, username, password,
        fullname, phonenumber,
        idtype, idnumber, drivernumber,
-       exptdate, ownbikeid = "null";
+       exptdate, ownbikeid = "null", rentbikeid = "null";
    float memrating = INITIAL_MEM_RATING;
    int credits = INITIAL_CREDITS;
    bool ownbike = false;
@@ -444,7 +445,7 @@ void System::guestRegister(){
                             fullname, phonenumber,
                             idtype, idnumber, drivernumber,
                             exptdate, memrating, credits,
-                            ownbike, ownbikeid);
+                            ownbike, ownbikeid, rentbikeid);
    memberVect.push_back(mem);
    std::cout << "=====================================================" << std::endl;
    std::cout << "|               -REGISTER SUCCESSFULLY-             |" << std::endl;
@@ -557,7 +558,7 @@ void System::rentMenu(){
    std::cout << "=====================================================" << std::endl;
    std::cout << "Choose your location:\t1. Hanoi\t2. Danang\t3. Saigon\n";
    int index = 0; // for keep track index in vector
-   int order = 1; // for display
+   int order = 0; // for display
    std::vector<int> track;
    int choice = menuChoice(1,3);
    std::cout << "=====================================================" << std::endl;
@@ -576,7 +577,7 @@ void System::rentMenu(){
    switch (choice) {
       case 1:
          for(MotorBike *bike: bikeVect){
-            if (bike->location == LOCATION[0]){  //HN
+            if (bike->location == LOCATION[0] && bike->status == BIKE_STATUS[0]){  //HN and Available
                std::cout << std::left << std::setw(10) << order
                          << std::left << std::setw(15) << bike->bikeID
                          << std::left << std::setw(15) << bike->model
@@ -598,7 +599,7 @@ void System::rentMenu(){
          break;
       case 2:
          for(MotorBike *bike: bikeVect){
-               if (bike->location == LOCATION[1]){  //DN
+               if (bike->location == LOCATION[1] && bike->status == BIKE_STATUS[0]){  //DN
                std::cout << std::left << std::setw(10) << order
                          << std::left << std::setw(15) << bike->bikeID
                          << std::left << std::setw(15) << bike->model
@@ -620,7 +621,7 @@ void System::rentMenu(){
          break;
       case 3:
          for(MotorBike *bike: bikeVect){
-            if (bike->location == LOCATION[2]){  //SG
+            if (bike->location == LOCATION[2] && bike->status == BIKE_STATUS[0]){  //SG
                std::cout << std::left << std::setw(10) << order
                          << std::left << std::setw(15) << bike->bikeID
                          << std::left << std::setw(15) << bike->model
@@ -645,217 +646,22 @@ void System::rentMenu(){
       std::cout << "1. Choose bike to rent." << std::endl;
       std::cout << "2. Return to Rent Menu." << std::endl;
       int choice2 = menuChoice(1,2);
+      int choice3;
       switch (choice2) {
       case 1:
-         /* code */
+         choice3 = menuChoice(0,order,track);
+         std::cout << "choice3 = " << choice3 << std::endl;
+         currentBike = bikeVect[choice3];
+         currentMember->rentBikeID = currentBike->bikeID;
+         currentBike->showBikeInfo();
+         currentMember->sendRequest();
+         std::cout << "=====================================================" << std::endl;
+         std::cout << "|----------------Return to MemberMenu---------------|" << std::endl;
+         std::cout << "=====================================================" << std::endl;
+         memberMenu();
          break;
-      
       case 2:
          rentMenu();
          break;
       }
-}
-//-------------------Debug Functions--------------------------------
-int menuChoice(int start, int end) {
-   int finalChoice;
-   bool flag;
-   std::string tempo;
-   do {
-      std::cout << "Enter your choice: ";
-      std::cin >> tempo;
-      if (numValid(tempo)) {   //check if the input is number
-         std::cout << "Only enter number as choice! Try again!" << std::endl;
-         flag = false;
-         continue;
-      }
-      finalChoice = std::stoi(tempo);
-      if (finalChoice > end || finalChoice < start){  //check if the input is in range
-         std::cout << "Enter choice in the range " << start << " - " << end << " only!" << std::endl;
-         flag = false;
-      } else {
-         flag = true;
-      }
-   } while (!flag);
-   return finalChoice;
-};
-int menuChoice(int start, int end,std::vector<int> track) { 
-   int finalChoice;
-   bool flag;
-   std::string tempo;
-   do{
-      std::cout << "Enter your bike choice: ";
-      std::cin >> tempo;
-      // std::cin.ignore();
-      if (numValid(tempo)){   //check if the input is number
-         std::cout <<"Only enter number as choice! Try again!"<<std::endl;
-         flag = false;
-         continue;
-      }
-      finalChoice = std::stoi(tempo);
-      for (int i = 0; i < track.size(); i++) {
-         if (finalChoice > end || finalChoice < start) {
-            std::cout << "Enter choice in the range " << start << " - " << end << " only!" << std::endl;
-            flag = false;
-         }
-         else
-         {
-            flag = true;
-         }
-      }
-   } while (!flag);
-   return track[finalChoice];
-};
-//-------------------Validate input for system---------------------
-bool numValid(std::string s){
-   std::regex reg ("^[0-9 ]+$"); //only allow number
-   std::string str;
-   str = stringCut(s);
-   if (!std::regex_match(str, reg)) {
-      return false;
-   }
-   return false;
-}
-bool isPhoneNum(std::string s){// first 0, 10 char, all num
-   if (s.length() != 10){ return false;}
-   if (s[0] != '0'){ return false;}
-   std::regex reg ("^[0-9 ]+$"); //only allow number
-   std::string str = stringCut(s);
-   if(!std::regex_match(str, reg)) {
-      return false;
-   }
-   return true;
-}  
-bool isPassword(std::string s){    // min length 8 char, no space
-   //min length of 8 - 15, one uppercase, one number, one special character
-   std::regex reg ("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9@$!%*?&]{8,15}$");
-   s = stringCut(s);
-   if (!std::regex_match(s, reg)){
-      return false;
-   } 
-   return true;
-}
-bool isUsername(std::string s){// no symbol, space, min length 6
-   if (s.length() < 6){    // min length > 6
-      // std::cout << "too short" << std::endl;
-      return false; 
-   }
-   std::regex reg ("^[&=_'-+,<>. ]+$"); //doesnt include those symbols (&=_'-+,<>.)
-   if (std::regex_match(s, reg)){
-      // std::cout << "Cant have these symbols" << std::endl;
-      return false;
-   }
-   for (int i = 0; i < s.length(); i++) {
-      if (s[i] == ' ') { // no whitespace
-         // std::cout << "No whitespace" << std::endl;
-         return false;
-      }
-   }
-   return true;
-}  
-bool isFullname(std::string s){// no symbol, number,
-   std::regex reg("^[a-zA-Z ]+$"); // only allow letter uppercase and lowercase
-   s = stringCut(s);
-   if (!std::regex_match(s, reg)) {
-      return false; 
-   } 
-   return true;
-}  
-bool isDateFormat(std::string s){   // DD/MM/YYYY
-   if ((s.length() != 10) || (s[2] != '/' || s[5] != '/')){ // format check DD/MM/YYYY
-      std::cerr << "Invalid format string. Must follow format DD/MM/YYYY." << std::endl;
-      return false;
-   }
-   
-   std::string date = s.substr(0,2);
-   std::string month = s.substr(3,2);
-   std::string year = s.substr(6,4);
-   // std::cout << "day: " << date << " month: "  << month << " year: " << year << std::endl;
-   
-   if (std::stoi(month) == 2){   // leap year 
-      if (std::stoi(year) % 4 == 0){
-         if (std::stoi(date) > 29) {
-            std::cerr << "Invalid date. Leap year. February only have 29 days!" << std::endl;
-            return false;
-         }  
-      } else {
-         if (std::stoi(date) > 28) {
-            std::cerr << "Invalid date. Not a leap year. February only have 28 days!" << std::endl;
-            return false;
-         } 
-      }
-
-   }
-
-
-
-   if (std::stoi(year) < 2023){  //year check
-      std::cerr << "License expired" << std::endl;
-      return false;
-   } 
-
-   if (std::stoi(month) > 12 || std::stoi(month) < 0){   //month check
-      std::cerr << "Invalid Month. Only 1-12" << std::endl;
-      return false;
-   }
-
-   for (int m : {1,3,5,7,8,10,12}) {   //date check
-      if (std::stoi(month) == m && std::stoi(date) > 31){
-         std::cerr << "Invalid date. Month " << month  << " only have 31 days" << std::endl;
-         return false;
-      }
-   }
-   for (int m : {2, 4, 6, 9, 11}) {
-      if (std::stoi(month) == m && std::stoi(date) > 30){
-         std::cerr << "Invalid date. Month " << month  << " only have 30 days" << std::endl;
-         return false;
-      }
-   }
-   
-
-   return true;
-}       
-bool isLicence(std::string s){// 12 number, no space or symbol
-   if (s.length() != 12)
-      return false;              // minlength is 12
-   std::regex reg ("^[0-9 ]+$"); //only allow number
-   s = stringCut(s);
-   if (!regex_match(s,reg)){
-      return false;
-   } else {
-      return true;
-   }
-}
-bool isIDValid(std::string s, int num){// 8 number for passport, 10 for citizen ID
-   std::regex reg ("^[0-9 ]+$"); //only allow number
-   std::string str;
-   str = stringCut(s);
-   if (num == 1){ //citizenID
-      if(s.length() != 12) return false;
-      if(!regex_match(str,reg))return false;
-   } else if(num == 2){ //passport
-      if(s.length() != 8) return false;   
-      if(!regex_match(str,reg))return false;
-   }
-   return true;
-} 
-//-------------------Other support functions-----------------------
-std::vector <std::string> splitString(std::string &str, char delimiter){//cut string into substring
-   std::vector <std::string> result;
-   std::istringstream is(str);
-   std::string item;
-   while (std::getline(is, item, delimiter)) {
-      result.push_back(item);
-   }
-   return result;
-}
-std::string stringCut(std::string &s){  //remove all spaces
-   std::string result;
-   for (char c : s){
-      if (c == ' '){
-         continue;
-      } else {
-         result += c;
-      }
-   }
-   return result;
 }
