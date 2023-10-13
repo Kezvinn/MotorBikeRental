@@ -49,6 +49,7 @@ class System {
       void saveBikesToFile();
 
       void rentMenu();
+      void listBike();
       
 };
 // std::vector<std::string> splitString(std::string &input, char delimiter);

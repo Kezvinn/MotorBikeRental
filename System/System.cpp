@@ -49,7 +49,7 @@ void System::guestMenu(){
          break;
       case 2:
          guestRegister();
-         saveMemberToFile();
+         // saveMemberToFile();
          break;
       case 3:
          mainMenu();
@@ -189,6 +189,7 @@ void System::memberMenu(){
    case 2:
       //add bike
       addBike();
+      memberMenu();
       break;
    case 3:
       //list/unlist bike
@@ -202,6 +203,8 @@ void System::memberMenu(){
       //view history
       break;
    case 6:
+      saveMemberToFile();
+      saveBikesToFile();
       std::cout << "=====================================================" << std::endl;
       std::cout << "|               -THANK YOU FOR USING-               |" << std::endl;
       std::cout << "=====================================================" << std::endl;
@@ -225,11 +228,11 @@ void System::loadMembers(){
                                   dataList[3], dataList[4],
                                   dataList[5], dataList[6], dataList[7],
                                   dataList[8], std::stof(dataList[9]), std::stoi(dataList[10]),
-                                  dataList[11],dataList[12]); // add attributes
+                                  dataList[11], dataList[12]); // add attributes
       memberVect.push_back(member);
    }
    file.close();  
-   std::cout << "Member file loaded" << std::endl;
+   // std::cout << "Member file loaded" << std::endl;
 }
 void System::loadBikes(){
    bikeVect.clear();
@@ -251,7 +254,7 @@ void System::loadBikes(){
       bikeVect.push_back(bike);
    }
    file.close();  
-   std::cout << "Bike file loaded" << std::endl;
+   // std::cout << "Bike file loaded" << std::endl;
 }
 void System::loadAdmin(){
    std::ifstream file{ADMIN_FILE};
@@ -268,11 +271,18 @@ void System::loadAdmin(){
    
    this->admin = new Admin(username, password);
 
-   std::cout << "Admin file loaded" << std::endl;
+   // std::cout << "Admin file loaded" << std::endl;
    file.close();
 }
 
 void System::saveBikesToFile(){
+   if (currentBike != nullptr){
+      for(auto b : bikeVect) {
+         if (currentBike->bikeID == b->bikeID) {
+            b = currentBike;
+         }
+      }
+   }
    std::ofstream file {BIKE_FILE};
    if (!file ){
       std::cerr << "Couldn't open motorbike file" << std::endl;
@@ -288,9 +298,16 @@ void System::saveBikesToFile(){
            << bike->description << std::endl;
    }
    file.close();
-   std::cout << "Motorbike file saved successfully!" << std::endl;
+   // std::cout << "Motorbike file saved successfully!" << std::endl;
 }
 void System::saveMemberToFile(){
+   if (currentMember != nullptr){
+      for(auto m : memberVect) {
+         if (currentMember->memberID == m->memberID) {
+            m = currentMember;
+         }
+      }
+   }
    std::ofstream file{MEMBER_FILE};
    if (!file){
       std::cerr<< "Couln't open member file" <<std::endl;
@@ -302,25 +319,26 @@ void System::saveMemberToFile(){
            << mem->phoneNumber << "|" << mem->idType << "|"
            << mem->idNumber << "|" << mem->drvNumber << "|"
            << mem->expDate << "|" << mem->memRating << "|"
-           << mem->credits;
-      if (currentMember != nullptr) {  //for members
-         if (mem->memberID == currentMember->memberID) {
-            if(currentMember->ownBikeID == "null") {
-               file << "|null";
-            } else {
-               file << "|" << currentMember->ownBikeID;
-            }
-         } else {
-            file << "|" << mem->ownBikeID << "|" << mem->rentBikeID;
-         }
-      } 
-      else { //new register
-         file << "|" << mem->ownBikeID << "|" << mem->rentBikeID;
-      }
+           << mem->credits << "|" << mem->ownBikeID << "|"
+           << mem->rentBikeID;
+      // if (currentMember != nullptr) {  //for members
+      //    if (mem->memberID == currentMember->memberID) {
+      //       if(currentMember->ownBikeID == "null") {
+      //          file << "|null";
+      //       } else {
+      //          file << "|" << currentMember->ownBikeID;
+      //       }
+      //    } else {
+      //       file << "|" << mem->ownBikeID << "|" << mem->rentBikeID;
+      //    }
+      // } 
+      // else { //new register
+      //    file << "|" << mem->ownBikeID << "|" << mem->rentBikeID;
+      // }
       file << "\n";
    }
    file.close();
-   std::cout << "Members file saved successfully!" << std::endl;
+   // std::cout << "Members file saved successfully!" << std::endl;
 }
 
 void System::guestViewBikes(){
@@ -447,6 +465,7 @@ void System::guestRegister(){
                             exptdate, memrating, credits,
                             ownbikeid, rentbikeid);
    memberVect.push_back(mem);
+   saveMemberToFile();
    std::cout << "=====================================================" << std::endl;
    std::cout << "|               -REGISTER SUCCESSFULLY-             |" << std::endl;
    std::cout << "=====================================================" << std::endl;
@@ -635,7 +654,7 @@ void System::rentMenu(){
          currentBike = bikeVect[choice3];
          currentMember->rentBikeID = currentBike->bikeID;
          currentBike->showBikeInfo();
-         currentMember->sendRequest(currentBike->rentPrice);
+         currentMember->sendRequest(currentBike->bikeID, currentBike->rentPrice);
 
          std::cout << "=====================================================" << std::endl;
          std::cout << "|                Return to MemberMenu               |" << std::endl;
@@ -675,7 +694,7 @@ void System::addBike(){
    } while (!isColor(color));
 
    do {
-      std::cout << "Format " <<std::endl;
+      std::cout << "Format: no symbol, character. Unit (cc) Number ONLY." <<std::endl;
       std::cout << "Enter bike engine size: ";
       std::getline(std::cin,enginesize);
       std::cout << "=====================================================" << std::endl;
@@ -696,8 +715,9 @@ void System::addBike(){
       break;
    }
    std::cout << "=====================================================" << std::endl;
+   std::cin.ignore();
    do {
-      std::cout << "Format: number only" << std::endl;
+      std::cout << "Format: YYYY, number ONLY." << std::endl;
       std::cout << "Enter bike year made: ";
       std::getline(std::cin,yearmade);
       std::cout << "=====================================================" << std::endl;
@@ -705,7 +725,7 @@ void System::addBike(){
    bikerating = "10.0";
 
    do {
-      std::cout << "Format: integer number > 0" << std::endl;
+      std::cout << "Format: integer number > 0." << std::endl;
       std::cout << "Enter bike rent price: ";
       std::getline(std::cin,rentprice);
       std::cout << "=====================================================" << std::endl;
@@ -726,8 +746,14 @@ void System::addBike(){
       break;
    }
    std::cout << "=====================================================" << std::endl;
-   
-   memrating = "10.0";
+   std::cin.ignore();
+   do {
+      std::cout << "Format: Number ONLY." << std::endl;
+      std::cout << "Enter member rating: ";
+      std::getline(std::cin, memrating);
+      std::cout << "=====================================================" << std::endl;
+   } while (!isFloat(memrating));
+
    status = BIKE_STATUS[1]; // status  unavailable by default
    rentduration = "0";
    do {
@@ -735,16 +761,34 @@ void System::addBike(){
       std::cout << "Enter bike description: ";
       std::getline(std::cin,description);
       std::cout << "=====================================================" << std::endl;
-   } while (!isRent(description));
+   } while (!isDescription(description));
    
    MotorBike *bike = new MotorBike(bikeid, model, color,
                                    std::stoi(enginesize), mode, yearmade,
                                    std::stof(bikerating), std::stoi(rentprice), location,
-                                   std::stoi(memrating), status, std::stoi(rentduration),
+                                   std::stof(memrating), status, std::stoi(rentduration),
                                    description);
    bikeVect.push_back(bike);
+   currentMember->ownBikeID = bikeid;  //save bike id to member
    bike->showBikeInfo();   // show bike information
    std::cout << "=====================================================" << std::endl;
    std::cout << "|              -BIKE ADDED SUCCESSFULLY-            |" << std::endl;
    std::cout << "=====================================================" << std::endl;
+}
+void System::listBike(){
+   //display bike infor
+   //choose option to list or unlist bike.
+   std::cout << "List/Unlist motorbike." << std::endl;
+   std::cout << "1. List bike for rent." << std::endl;
+   std::cout << "2. Unlist bike." << std::endl;
+   int choice = menuChoice(1,2);
+   switch (choice) {
+   case 1:
+      
+      break;
+   
+   case 2:
+   
+      break;
+   }
 }

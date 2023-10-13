@@ -6,6 +6,7 @@ int menuChoice(int start, int end);
 int menuChoice(int start, int end, std::vector<int> track);
 //for member registration
 bool numValid(std::string s);
+bool numValid(std::string s, int range);
 bool isPhoneNum(std::string s);  // first 0, 10 char, all num
 bool isPassword(std::string s);  // min length 8 char, no space
 bool isUsername(std::string s);  // no symbol, space, min length 6
@@ -25,5 +26,5 @@ bool isEngineSize(std::string s);   // number only, > 0
 bool isYear(std::string s); // 4 num only
 bool isRent(std::string s); // int number > 0, 
 bool isDescription(std::string s); //
-
+bool isFloat(std::string s);
 #endif

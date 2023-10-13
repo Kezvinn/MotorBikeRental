@@ -20,11 +20,11 @@ MotorBike::MotorBike(std::string i_bikeID, std::string i_model, std::string i_co
 
 void MotorBike::showBikeInfo(){  //use to display after user added a new bike
    std::cout << "=====================================================" << std::endl;
-   std::cout << "Model: "  << model << "\t\tColor: " << color << std::endl;
-   std::cout << "Engine Size: " << engineSize << "\t\tMode: " << mode << std::endl;
-   std::cout << "Year Made: " << yearMade << "\t\tLocation: " <<location<<std::endl;
-   std::cout << "Rent Price: " << rentPrice << "\t\tBike Rating: " << bikeRating << std::endl;
-   std::cout << "Member Rating: " << memRating << "\t\tStatus: " <<status << std::endl;
-   std::cout << "Description: " << description << std::endl;
+   std::cout << "| Model: "  << model << "\t\tColor: " << color << std::right << std::setw(10) << "|" << std::endl;
+   std::cout << "| Engine Size: " << engineSize << "\t\tMode: " << mode << std::right << std::setw(10) << "|" << std::endl;
+   std::cout << "| Year Made: " << yearMade << "\t\tLocation: " << location << std::right << std::setw(10) << "|" <<std::endl;
+   std::cout << "| Rent Price: " << rentPrice << "\t\tBike Rating: " << bikeRating << std::right << std::setw(10) << "|" <<  std::endl;
+   std::cout << "| Member Rating: " << memRating << "\t\tStatus: " << status << std::right << std::setw(10) << "|" << std::endl;
+   std::cout << "| Description: " << description << std::right << std::setw(10) << "|" << std::endl;
    std::cout << "=====================================================" << std::endl;
 }

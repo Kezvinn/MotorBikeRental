@@ -59,6 +59,16 @@ bool numValid(std::string s){
    }
    return true;
 }
+bool numValid(std::string s, int range){  //number in a certain range
+   if (std::stoi(s) > range) {return false;};
+   std::regex reg ("^[0-9 ]+$"); //only allow number
+   std::string str;
+   str = stringCut(s);
+   if (!std::regex_match(str, reg)) {
+      return false;
+   }
+   return true;
+}
 bool isPhoneNum(std::string s){// first 0, 10 char, all num
    if (s.length() != 10){ return false;}
    if (s[0] != '0'){ return false;}
@@ -286,5 +296,14 @@ bool isDescription(std::string s){  // letter and certain characters allowed
    if (!std::regex_match(s, reg)) {
       return false; 
    } 
+   return true;
+}
+bool isFloat(std::string s) {
+   std::regex reg ("^[0-9. ]+$"); //only allow number
+   std::string str;
+   str = stringCut(s);
+   if (!std::regex_match(str, reg)) {
+      return false;
+   }
    return true;
 }

@@ -30,7 +30,7 @@ void Member::showMemberInfo(){
    std::cout << "=====================================================" << std::endl;
 }
 
-void Member::sendRequest(int cost){
+void Member::sendRequest(std::string bikeID, int cost){
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                REQUEST PREPARATION                |" << std::endl;
    std::cout << "=====================================================" << std::endl;
@@ -40,7 +40,7 @@ void Member::sendRequest(int cost){
    requestid = rqstIDGenerate();
    renterid = this->memberID;
    rqststatus = RQST_STATUS[0];  //pending by default
-   rentbikeid = this->rentBikeID;
+   rentbikeid = bikeID; 
    do{
       do {
          std::cout << "Format: DD/MM/YYYY" << std::endl;
@@ -60,24 +60,26 @@ void Member::sendRequest(int cost){
       }
    } while(duration(startdate,enddate) < 0); //end date > start date
 
+   int total = cost * duration(startdate, enddate);
+
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                   -CONFIRMATION-                  |" << std::endl;
+   std::cout << "| Start date:\t" << startdate << std::left << std::setw(30) << "|" << std::endl;
+   std::cout << "| End date:\t" << enddate << std::left << std::setw(30) << "|" << std::endl;
+   std::cout << "| Total cost: " << total << " credits." << std::left << std::setw(25) << "|" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+
+   if (this->credits < total) {
+      std::cout << "Current balance: " << this->credits  << " credits"<< std::endl;
+      std::cout << "Insufficient credits!" << std::endl;
+      topUp();
+   }
+   this->credits -= total; 
+   this->rentBikeID = bikeID; //record the rent bike id;
    Request *rqst = new Request(requestid, renterid, rentbikeid,
                                startdate, enddate, rqststatus);
    rqstVect.push_back(rqst);
    saveRequestToFile(); // save to txt file
-   int total = cost * duration(startdate, enddate);
-
-   std::cout << "=====================================================" << std::endl;
-   std::cout << "|                    CONFIRMATION                   |" << std::endl;
-   std::cout << "=====================================================" << std::endl;
-   std::cout << "Start date: " << startdate << std::endl;
-   std::cout << "End date: " << enddate << std::endl;
-   std::cout << "Total cost: " << total << std::endl;
-   std::cout << "=====================================================" << std::endl;
-
-   if (this->credits < total) {
-      std::cout << "Insufficient credits!" << std::endl;
-      topUp();
-   }
 
    std::cout << "=====================================================" << std::endl;
    std::cout << "|              REQUEST SENT SUCCESSFULLY            |" << std::endl;
@@ -174,7 +176,6 @@ void Member::topUp(){
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                      TOP-UP                       |" << std::endl;
    std::cout << "=====================================================" << std::endl;
-   std::cin.ignore();
    std::string in_credits;
    do {
       std::cout << "Format: only interger number allowed" << std::endl;
@@ -189,5 +190,23 @@ void Member::topUp(){
    if (pass == this->password) {
       this->credits += std::stoi(in_credits);
       std::cout << "Correct password. Credits added successfully." << std::endl;
+   }
+}
+
+void Member::listBike(){
+   //display bike infor
+   //choose option to list or unlist bike.
+   std::cout << "List/Unlist motorbike." << std::endl;
+   std::cout << "1. List bike for rent." << std::endl;
+   std::cout << "2. Unlist bike." << std::endl;
+   int choice = menuChoice(1,2);
+   switch (choice) {
+   case 1:
+      
+      break;
+   
+   case 2:
+   
+      break;
    }
 }

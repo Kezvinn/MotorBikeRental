@@ -35,7 +35,7 @@ class Member : public User {
              std::string i_expDate, float i_memRating, int i_credits,
              std::string i_ownBikeID, std::string i_rentBikeID);
       void showMemberInfo();  // show member info
-      void sendRequest(int cost);  // get dates and create request
+      void sendRequest(std::string bikeID, int cost);  // get dates and create request
       void loadRequest();  //get all request from file txt
       void saveRequestToFile();  //save request to file txt
       void viewRequest();  //choose which requst to accept
