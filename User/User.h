@@ -10,6 +10,7 @@ class User {
       User();
       User(std::string i_username, std::string i_password);
       friend class System;
+      friend class Member;
 };
 
 #endif // USER_H

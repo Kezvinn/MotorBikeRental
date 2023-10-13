@@ -4,7 +4,7 @@
 #include "User.h"
 #include "../Request/Request.h"
 #include "../Function/Function.h"
-#define REQUEST_FILE "../Data/Request.txt"
+#define REQUEST_FILE "Data/Request.txt"
 
 #define INITIAL_MEM_RATING 10.0
 #define INITIAL_CREDITS 20
@@ -22,7 +22,6 @@ class Member : public User {
       float memRating;
       std::string memberID; //auto-generated
       int credits;
-      bool ownBike = false;  
       std::string ownBikeID = "null";
       std::string rentBikeID = "null";
 
@@ -34,13 +33,13 @@ class Member : public User {
              std::string i_fullname, std::string i_phoneNumber,
              std::string i_idType, std::string i_idNumber, std::string i_drvNumber,
              std::string i_expDate, float i_memRating, int i_credits,
-             bool i_ownBike, std::string i_ownBikeID, std::string i_rentBikeID);
-      void showMemberInfo();
-      void sendRequest();
-      void loadRequest();
-      void saveRequestToFile();
+             std::string i_ownBikeID, std::string i_rentBikeID);
+      void showMemberInfo();  // show member info
+      void sendRequest(int cost);  // get dates and create request
+      void loadRequest();  //get all request from file txt
+      void saveRequestToFile();  //save request to file txt
       void viewRequest();  //choose which requst to accept
-      void topUp();
+      void topUp();  // add credits into accout
       friend class System;
 };
 std::string memIDGenerate();

@@ -1,9 +1,9 @@
 Bk-123|Ab|Black|150|Auto|2019|7.5|6|SG|6.8|Available|0|Good
 Bk-113|Vision|Blue|125|Auto|2019|4.6|6|DN|6.8|Available|0|Good
-Bk-341|Future|Green|150|Manual|2020|8.9|7|HN|6.8|Unavailable|2|Perfect
+Bk-341|Future|Green|150|Manual|2020|8.9|7|HN|6.8|Available|0|Perfect
 Bk-908|Lead|Red|150|Auto|2019|7.5|6|SG|5.7|Available|0|Execelent
-Bk-342|FutureNeo|Black|200|Manual|2022|8.7|7|DN|6.8|Unavailable|2|Perfect
-Bk-311|Future|Grey|125|Manual|2020|8.3|7|HN|6.1|Unavailable|2|Perfect
+Bk-342|FutureNeo|Black|200|Manual|2022|8.7|7|DN|6.8|Available|2|Perfect
+Bk-311|Future|Grey|125|Manual|2020|8.3|7|HN|6.1|Available|2|Real bad
 Bk-351|SH|Orange|200|Auto|2021|5.3|7|HN|6.4|Available|0|Bad
-Bk-125|Neo Future|Green|150|Manual|2020|8.9|7|SG|6.8|Unavailable|2|Perfect
-Bk-323|Wave|Green|150|Manual|2020|8.9|7|DN|6.8|Available|0|Good
+Bk-125|Neo Future|Green|150|Manual|2020|8.9|7|SG|6.8|Available|2|Perfect
+Bk-323|Wave|Green|150|Manual|2020|8.9|7|DN|6.8|Available|0|bad

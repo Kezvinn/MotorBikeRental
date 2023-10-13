@@ -13,12 +13,12 @@ Member::Member(std::string i_memberID, std::string i_memUsername, std::string i_
                std::string i_fullname, std::string i_phoneNumber,
                std::string i_idType, std::string i_idNumber, std::string i_drvNumber,
                std::string i_expDate, float i_memRating, int i_credits,
-               bool i_ownBike, std::string i_ownBikeID, std::string i_rentBikeID)
+               std::string i_ownBikeID, std::string i_rentBikeID)
     : memberID(i_memberID), User(i_memUsername, i_memPassword),
       fullName(i_fullname), phoneNumber(i_phoneNumber),
       idType(i_idType), idNumber(i_idNumber), drvNumber(i_drvNumber),
       expDate(i_expDate), memRating(i_memRating), credits(i_credits),
-      ownBike(i_ownBike), ownBikeID(i_ownBikeID), rentBikeID(i_rentBikeID) {};
+      ownBikeID(i_ownBikeID), rentBikeID(i_rentBikeID) {};
 
 void Member::showMemberInfo(){
    std::cout << "=====================================================" << std::endl;
@@ -26,16 +26,11 @@ void Member::showMemberInfo(){
    std::cout << "ID type: " << idType << "\tID#: " << idNumber << std::endl;
    std::cout << "Drv License #: " << drvNumber << "\tExp. date: " << expDate <<std::endl;
    std::cout << "Rating: " << memRating << "\tCredits: " << credits << std::endl;
-   if(ownBike == true) {
-      std::cout << "Own bike: true" << "\tBike ID: "<< ownBikeID << std::endl;
-   } else {
-      std::cout << "Own bike: false" << "\tBike ID: "<< ownBikeID << std::endl;
-   }
-   // std::cout << "Own bike ID: " << ownBikeID << std::endl;
+   std::cout << "Own Bike ID: "<< ownBikeID << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
 
-void Member::sendRequest(){
+void Member::sendRequest(int cost){
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                REQUEST PREPARATION                |" << std::endl;
    std::cout << "=====================================================" << std::endl;
@@ -68,9 +63,24 @@ void Member::sendRequest(){
    Request *rqst = new Request(requestid, renterid, rentbikeid,
                                startdate, enddate, rqststatus);
    rqstVect.push_back(rqst);
-   
+   saveRequestToFile(); // save to txt file
+   int total = cost * duration(startdate, enddate);
+
    std::cout << "=====================================================" << std::endl;
-   std::cout << "|              REQUEST SEND SUCCESSFULLY            |" << std::endl;
+   std::cout << "|                    CONFIRMATION                   |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "Start date: " << startdate << std::endl;
+   std::cout << "End date: " << enddate << std::endl;
+   std::cout << "Total cost: " << total << std::endl;
+   std::cout << "=====================================================" << std::endl;
+
+   if (this->credits < total) {
+      std::cout << "Insufficient credits!" << std::endl;
+      topUp();
+   }
+
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|              REQUEST SENT SUCCESSFULLY            |" << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
 void Member::loadRequest(){
@@ -99,7 +109,7 @@ void Member::viewRequest(){
              << std::setw(14) << "-Status-"
              << std::endl;
    for (auto rqst : rqstVect){
-      if (this->ownBikeID == rqst->rentbikeID){ // check if bike belong to user
+      if (rqst->rentbikeID == this->ownBikeID){ // check if bike belong to user
          std::cout << std::setw(7) << order
                    << std::setw(17) << rqst->renterID
                    << std::setw(18) << rqst->startDate
@@ -117,18 +127,48 @@ void Member::viewRequest(){
    std::cout << "2. Return to Member Menu." << std::endl;
    int choice = menuChoice(1,2);
    int choice2;
+   int choice3;
    switch (choice) {
    case 1:
-      choice2 = menuChoice(0,order,track);
-      
+      choice2 = menuChoice(0,order,track);   // request want to action
+      std::cout << "Action:\t1. Accept\t2. Decline" << std::endl;
+      choice3 = menuChoice(1,2);
+      if (choice3 == 1){
+         rqstVect[choice2]->rqst_status = RQST_STATUS[1];   //accepted
+      } else if (choice3 == 2){
+         rqstVect[choice2]->rqst_status = RQST_STATUS[2];   //declined
+      }
+      //delete the other request for the same bike
+      for (int i = 0; i < rqstVect.size(); i++) {
+         if (rqstVect[i]->rentbikeID == rqstVect[choice2]->rentbikeID && rqstVect[i]->rqst_status == RQST_STATUS[0]){
+            rqstVect.erase(rqstVect.begin()+i);
+         }
+      }
+      saveRequestToFile(); //save request to file
+      std::cout << "=====================================================" << std::endl;
+      std::cout << "|                      COMPLETED                    |" << std::endl;
+      std::cout << "=====================================================" << std::endl;
       break;   
-   case 2:
+   case 2:  //return to member menu
       break;
    }
 }
 
 void Member::saveRequestToFile(){
-
+   std::ofstream file {REQUEST_FILE};
+   if (!file){
+      std::cerr << "Couldn't open 'Request.txt'" << std::endl;
+   } 
+   for(auto rqst : rqstVect){
+      file << rqst->requestID << "|"
+           << rqst->renterID << "|"
+           << rqst->rentbikeID << "|"
+           << rqst->startDate << "|"
+           << rqst->endDate << "|"
+           << rqst->rqst_status
+           << std::endl;
+   }
+   file.close(); 
 }
 void Member::topUp(){
    std::cout << "=====================================================" << std::endl;
@@ -142,7 +182,12 @@ void Member::topUp(){
       std::getline(std::cin, in_credits);
       std::cout << "=====================================================" << std::endl;
    } while (!numValid(in_credits));
-   
-   this->credits += std::stoi(in_credits);   //add credit to member
 
+   std::string pass;
+   std::cout << "Enter your password: ";
+   std::getline(std::cin, pass);
+   if (pass == this->password) {
+      this->credits += std::stoi(in_credits);
+      std::cout << "Correct password. Credits added successfully." << std::endl;
+   }
 }

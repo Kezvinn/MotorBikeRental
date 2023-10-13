@@ -10,6 +10,8 @@
 #define MEMBER_FILE "Data/Member.txt"
 #define BIKE_FILE "Data/Bike.txt"
 #define ADMIN_FILE "Data/Admin.txt"
+
+#define INITIAL_BIKE_RATING 10.0
 class System {
    private:
       std::vector <Member*> memberVect;
@@ -38,7 +40,8 @@ class System {
 
       bool memberLogin(std::string userName, std::string password);
       void memberMenu();
-      
+      void addBike();
+
       void guestViewBikes();
       void guestRegister();
 

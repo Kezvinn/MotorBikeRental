@@ -233,3 +233,58 @@ int duration (std::string startDate, std::string endDate){  // DD/MM/YYYY
 
    return count2 - count1; 
 }
+
+bool isModel(std::string s){ // letter, certain characters allowed
+   std::regex reg("^[a-zA-Z&=_'-+,<>. ]+$"); 
+   s = stringCut(s);
+   if (!std::regex_match(s, reg)) {
+      return false; 
+   } 
+   return true;
+}
+bool isColor(std::string s){  //letter only, no symbol/number
+   std::regex reg("^[a-zA-Z ]+$"); 
+   s = stringCut(s);
+   if (!std::regex_match(s, reg)) {
+      return false; 
+   } 
+   return true;
+} 
+bool isEngineSize(std::string s){  // number only, > 0  
+   if(std::stoi(s) < 0) {return false;}
+   std::regex reg ("^[0-9 ]+$"); //only allow number
+   std::string str;
+   str = stringCut(s);
+   if (!std::regex_match(str, reg)) {
+      return false;
+   }
+   return true;
+}
+bool isYear(std::string s){ // 4 num only
+   if (s.length() != 4) {return false;}
+   std::regex reg ("^[0-9 ]+$"); //only allow number
+   std::string str;
+   str = stringCut(s);
+   if (!std::regex_match(str, reg)) {
+      return false;
+   }
+   return true;
+}
+bool isRent(std::string s){   // int number > 0,
+   if (std::stoi(s) < 0) {return false;} 
+   std::regex reg("^[0-9 ]+$"); // only allow number
+   std::string str;
+   str = stringCut(s);
+   if (!std::regex_match(str, reg)) {
+      return false;
+   }
+   return true;
+}  
+bool isDescription(std::string s){  // letter and certain characters allowed
+   std::regex reg("^[a-zA-Z&=_'-+,<>. ]+$"); 
+   s = stringCut(s);
+   if (!std::regex_match(s, reg)) {
+      return false; 
+   } 
+   return true;
+}
