@@ -11,7 +11,6 @@
 #define BIKE_FILE "Data/Bike.txt"
 #define ADMIN_FILE "Data/Admin.txt"
 
-#define INITIAL_BIKE_RATING 10.0
 class System {
    private:
       std::vector <Member*> memberVect;
@@ -21,49 +20,38 @@ class System {
       Member *currentMember = nullptr;  //pointer to current member
       MotorBike *currentBike = nullptr; //pointer to current motorbike
    public:
-      System();
+      System();   //default constructor
 
-      void mainMenu();
+      void mainMenu();  
 
-      void guestMenu();
-      void memberLoginMenu();
-      void adminLoginMenu();
+      void guestMenu(); 
+      void memberLoginMenu(); // login menu
+      void adminLoginMenu();  // login menu
 
       void loadMembers();  //retrieve all member in system to vector
-      void loadBikes(); //retrieve all member in system to vector
-      void loadAdmin(); //retrieve admin to system;
+      void loadBikes();    //retrieve all member in system to vector
+      void loadAdmin();    //retrieve admin to system;
 
       bool adminLogin(std::string userName, std::string password);
-      void adminMenu();
-      void adminViewBikes();
-      void adminViewMembers();
+      void adminMenu();       //after login
+      void adminViewBikes();  //view all bikes
+      void adminViewMembers();//view all members
 
       bool memberLogin(std::string userName, std::string password);
-      void memberMenu();
-      void addBike();
+      void memberMenu();   //after login
+      void addBike();      //add bike into system
 
-      void guestViewBikes();
-      void guestRegister();
+      void guestViewBikes();     // guest view bike
+      void guestRegister();      // register new member
 
-      void saveMemberToFile();
-      void saveBikesToFile();
+      void saveMemberToFile();   //save member to file
+      void saveBikesToFile();    //save bike to file
 
-      void rentMenu();
-      void listBike();
+      void rentMenu();  //member rent menu
+      void listBike();  //set status of bike for rent
+
+      void checkOwnBike();
+      // void viewHistory();
       
 };
-// std::vector<std::string> splitString(std::string &input, char delimiter);
-// std::string stringCut(std::string &s);
-
-// int menuChoice(int start, int end);
-// int menuChoice(int start, int end, std::vector<int> track);
-
-// bool numValid(std::string s);
-// bool isPhoneNum(std::string s);  // first 0, 10 char, all num
-// bool isPassword(std::string s);  // min length 8 char, no space
-// bool isUsername(std::string s);  // no symbol, space, min length 6
-// bool isFullname(std::string s);  // no symbol, number,
-// bool isDateFormat(std::string s);       // DD/MM/YYYY
-// bool isLicence(std::string s);          // 12 number, no space or symbol
-// bool isIDValid(std::string s, int num); // 8 number for passport, 10 for citizen ID
 #endif

@@ -1,5 +1,5 @@
 #include "Function.h"
-//-------------------Debug Functions--------------------------------
+//-------------------Option Choosing Functions----------------------------
 int menuChoice(int start, int end) {
    int finalChoice;
    bool flag;
@@ -49,7 +49,7 @@ int menuChoice(int start, int end,std::vector<int> track) {
    } while (!flag);
    return track[finalChoice];
 };
-//-------------------Validate input for system---------------------
+//-------------------Member information check-----------------------------
 bool numValid(std::string s){
    std::regex reg ("^[0-9 ]+$"); //only allow number
    std::string str;
@@ -183,7 +183,7 @@ bool isIDValid(std::string s, int num){// 8 number for passport, 10 for citizen 
    }
    return true;
 } 
-//-------------------String Manip functions-----------------------
+//-------------------String Manip functions--------------------------------
 std::vector <std::string> splitString(std::string &str, char delimiter){//cut string into substring
    std::vector <std::string> result;
    std::istringstream is(str);
@@ -204,7 +204,7 @@ std::string stringCut(std::string &s){  //remove all spaces
    }
    return result;
 }
-
+//-------------------Time calculate----------------------------------------
 int duration (std::string startDate, std::string endDate){  // DD/MM/YYYY
    std::vector <std::string> data1= splitString(startDate,'/');
    std::vector <std::string> data2= splitString(endDate,'/');
@@ -243,7 +243,7 @@ int duration (std::string startDate, std::string endDate){  // DD/MM/YYYY
 
    return count2 - count1; 
 }
-
+//-------------------Bike information check--------------------------------
 bool isModel(std::string s){ // letter, certain characters allowed
    std::regex reg("^[a-zA-Z&=_'-+,<>. ]+$"); 
    s = stringCut(s);

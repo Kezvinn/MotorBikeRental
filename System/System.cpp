@@ -55,6 +55,9 @@ void System::guestMenu(){
          mainMenu();
          saveMemberToFile();
          saveBikesToFile();
+         std::cout << "=====================================================" << std::endl;
+         std::cout << "|                 -THANK YOU FOR USING-             |" << std::endl;
+         std::cout << "=====================================================" << std::endl;
          break;
    }
 }
@@ -73,10 +76,10 @@ void System::memberLoginMenu(){
    switch (choice) {
    case 1:
       loadMembers();
-      std::cout << "Enter Member Username: ";
+      std::cout << "Enter Username: ";
       std::cin >> username;
       std::cin.ignore(0,' ');
-      std::cout << "Enter Member Password: ";
+      std::cout << "Enter Password: ";
       std::cin >> password;
       if (memberLogin(username, password)) { //if true -> login successfully
          std::cout << "Login successfully" << std::endl;
@@ -105,11 +108,11 @@ void System::adminLoginMenu(){
    switch (choice) {
    case 1:
       loadAdmin();   
-      std::cout << "Enter Admin Username: ";
+      std::cout << "Enter Username: ";
       // std::getline(std::cin, username);
       std::cin >> username;
       std::cin.ignore(0,' ');
-      std::cout << "Enter Admin Password: ";
+      std::cout << "Enter Password: ";
       std::cin >> password;
       // std::getline(std::cin, password);
       if (adminLogin(username,password)) {
@@ -182,17 +185,20 @@ void System::memberMenu(){
    std::cout << "5. View History" << std::endl; //view history of bike or member
    std::cout << "6. Logout" << std::endl;
    int choice = menuChoice(1,6);
+   bool flags;
    switch (choice) {
    case 1:
       rentMenu();
       break;
    case 2:
       //add bike
-      addBike();
-      memberMenu();
+      checkOwnBike();   //check if already have bike then action;
+      //replace current bike
+      //dont add new bike
       break;
-   case 3:
+   case 3:  
       //list/unlist bike
+      listBike();
       break;
    case 4:  
       //view request
@@ -367,16 +373,14 @@ void System::guestViewBikes(){
    }
    std::cout << "Continue" << std::endl;
    std::cout << "1. Sign up." << std::endl;
-   std::cout << "2. Exit program." << std::endl;
+   std::cout << "2. Return to Guest Menu." << std::endl;
    int choice = menuChoice(1,3);
    switch (choice){
    case 1:
       guestRegister();
       break;
    case 2:
-      std::cout << "=====================================================" << std::endl;
-      std::cout << "|                 -THANK YOU FOR USING-             |" << std::endl;
-      std::cout << "=====================================================" << std::endl;
+      guestMenu();
       break;
    }
 }
@@ -560,35 +564,23 @@ void System::rentMenu(){
    std::vector<int> track;
    int choice = menuChoice(1,3);
    std::cout << "=====================================================" << std::endl;
-   std::cout << std::left << std::setw(10) << "-Index- "
-             << std::left << std::setw(15) << "-Bike ID-"
-             << std::left << std::setw(15) << "-Model-"
-             << std::left << std::setw(15) << "-Color-"
-             << std::left << std::setw(15) << "-Year Made-"
-             << std::left << std::setw(15) << "-Mode-"
-             << std::left << std::setw(15) << "-Location-"
-             << std::left << std::setw(15) << "-Credits-"
-             << std::left << std::setw(15) << "-Bike Rating-"
-             << std::left << std::setw(15) << "-Member Rating-"
-             << std::left << std::setw(25) << "-Descripton-"
-             << std::endl;
+   std::cout << std::setw(7) << "-Index-" << std::setw(15) << "-Bike ID-"
+             << std::setw(13) << "-Model-" << std::setw(13) << "-Color-"
+             << std::setw(16) << "-Year Made-" << std::setw(12) << "-Mode-"
+             << std::setw(16) << "-Location-" << std::setw(15) << "-Credits-"
+             << std::setw(19) << "-Bike Rating-" << std::setw(21) << "-Member Rating-"
+             << std::setw(18) << "-Descripton-" << std::endl;
    switch (choice) {
       case 1:
          for(MotorBike *bike: bikeVect){
          if (bike->location == LOCATION[0] && bike->status == BIKE_STATUS[0] &&
              bike->bikeID != currentMember->ownBikeID && bike->memRating <= currentMember->memRating) { // HN/Available/not own bike/ qualify with rating
-            std::cout << std::left << std::setw(10) << order
-                      << std::left << std::setw(15) << bike->bikeID
-                      << std::left << std::setw(15) << bike->model
-                      << std::left << std::setw(15) << bike->color
-                      << std::left << std::setw(15) << bike->yearMade
-                      << std::left << std::setw(15) << bike->mode
-                      << std::left << std::setw(15) << bike->location
-                      << std::left << std::setw(15) << bike->rentPrice
-                      << std::left << std::setw(15) << bike->bikeRating
-                      << std::left << std::setw(15) << bike->memRating
-                      << std::left << std::setw(25) << bike->description
-                      << std::endl;
+            std::cout << std::setw(4) << order << std::setw(16) << bike->bikeID
+                << std::setw(14) << bike->model << std::setw(13) << bike->color
+                << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
+                << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
+                << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
+                << std::setw(21) << bike->description << std::endl;
             order++;
             track.push_back(index);
          }
@@ -600,20 +592,14 @@ void System::rentMenu(){
          for(MotorBike *bike: bikeVect){
          if (bike->location == LOCATION[1] && bike->status == BIKE_STATUS[0] &&
              bike->bikeID != currentMember->ownBikeID && bike->memRating <= currentMember->memRating) { // DN
-               std::cout << std::left << std::setw(10) << order
-                         << std::left << std::setw(15) << bike->bikeID
-                         << std::left << std::setw(15) << bike->model
-                         << std::left << std::setw(15) << bike->color
-                         << std::left << std::setw(15) << bike->yearMade
-                         << std::left << std::setw(15) << bike->mode
-                         << std::left << std::setw(15) << bike->location
-                         << std::left << std::setw(15) << bike->rentPrice
-                         << std::left << std::setw(15) << bike->bikeRating
-                         << std::left << std::setw(15) << bike->memRating
-                         << std::left << std::setw(25) << bike->description
-                         << std::endl;
-               order++;
-               track.push_back(index);
+            std::cout << std::setw(4) << order << std::setw(16) << bike->bikeID
+                      << std::setw(14) << bike->model << std::setw(13) << bike->color
+                      << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
+                      << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
+                      << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
+                      << std::setw(21) << bike->description << std::endl;
+            order++;
+            track.push_back(index);
          }
             index++;
          }
@@ -623,20 +609,14 @@ void System::rentMenu(){
          for(MotorBike *bike: bikeVect){
             if (bike->location == LOCATION[2] && bike->status == BIKE_STATUS[0] &&
                 bike->bikeID != currentMember->ownBikeID && bike->memRating <= currentMember->memRating) { // SG
-               std::cout << std::left << std::setw(10) << order
-                         << std::left << std::setw(15) << bike->bikeID
-                         << std::left << std::setw(15) << bike->model
-                         << std::left << std::setw(15) << bike->color
-                         << std::left << std::setw(15) << bike->yearMade
-                         << std::left << std::setw(15) << bike->mode
-                         << std::left << std::setw(15) << bike->location
-                         << std::left << std::setw(15) << bike->rentPrice
-                         << std::left << std::setw(15) << bike->bikeRating
-                         << std::left << std::setw(15) << bike->memRating
-                         << std::left << std::setw(25) << bike->description
-                         << std::endl;
-               order++;
-               track.push_back(index);
+            std::cout << std::setw(4) << order << std::setw(16) << bike->bikeID
+                      << std::setw(14) << bike->model << std::setw(13) << bike->color
+                      << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
+                      << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
+                      << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
+                      << std::setw(21) << bike->description << std::endl;
+            order++;
+            track.push_back(index);
             }
          index++;
          }
@@ -666,13 +646,48 @@ void System::rentMenu(){
          break;
       }
 }
-
+void System::checkOwnBike(){
+   if (currentMember->ownBikeID != "null"){  // already have bike list
+      std::cout << "You already have bike!" << std::endl;
+      for (auto bike : bikeVect){
+         if (currentMember->ownBikeID == bike->bikeID){
+            currentBike = bike;
+         }
+      }
+      
+      currentBike->showBikeInfo();
+      std::cout << "Continue?" << std::endl;
+      std::cout << "1. Yes, remove current bike and add new bike." << std::endl;
+      std::cout << "2. No, return to Member Menu." << std::endl;
+      int choice3 = menuChoice(1,2);
+      switch (choice3) {
+         case 1:
+            for (int i = 0; i < bikeVect.size(); i++) {
+               if (bikeVect[i]->bikeID == currentMember->ownBikeID) {
+                  bikeVect.erase(bikeVect.begin()+ i);
+               }
+            }
+            currentBike = nullptr;  //remove pointer
+            addBike();
+            memberMenu();
+            break;
+         case 2:
+            memberMenu();
+            break;
+      }
+   }
+   else {
+      addBike();
+      memberMenu();
+   }
+}
 void System::addBike(){
+   // checkOwnBike();
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                  -BIKE REGISTRATION-              |" << std::endl;
    std::cout << "=====================================================" << std::endl;
    std::cin.ignore();
-
+   
    std::string bikeid, model, color,
        enginesize, mode, yearmade,
        bikerating, rentprice, location,
@@ -722,6 +737,7 @@ void System::addBike(){
       std::getline(std::cin,yearmade);
       std::cout << "=====================================================" << std::endl;
    } while (!isYear(yearmade));
+   
    bikerating = "10.0";
 
    do {
@@ -754,7 +770,7 @@ void System::addBike(){
       std::cout << "=====================================================" << std::endl;
    } while (!isFloat(memrating));
 
-   status = BIKE_STATUS[1]; // status  unavailable by default
+   status = BIKE_STATUS[1]; // status unavailable by default
    rentduration = "0";
    do {
       std::cout << "Format: no certain symbol" << std::endl;
@@ -770,25 +786,33 @@ void System::addBike(){
                                    description);
    bikeVect.push_back(bike);
    currentMember->ownBikeID = bikeid;  //save bike id to member
+   currentBike = bike;
    bike->showBikeInfo();   // show bike information
    std::cout << "=====================================================" << std::endl;
    std::cout << "|              -BIKE ADDED SUCCESSFULLY-            |" << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
 void System::listBike(){
-   //display bike infor
-   //choose option to list or unlist bike.
+   std::cout << "=====================================================" << std::endl;
    std::cout << "List/Unlist motorbike." << std::endl;
    std::cout << "1. List bike for rent." << std::endl;
    std::cout << "2. Unlist bike." << std::endl;
    int choice = menuChoice(1,2);
-   switch (choice) {
-   case 1:
-      
-      break;
-   
-   case 2:
-   
-      break;
+   for (auto bike : bikeVect){
+      if (bike->bikeID == currentMember->ownBikeID){
+         currentBike = bike;  //locate bike
+      }
    }
+   switch (choice) {
+      case 1:
+         currentBike->status = BIKE_STATUS[0]; // Available
+         break;
+      case 2:
+         currentBike->status = BIKE_STATUS[1];  //Unavailable
+         break;
+   }
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                   -ACTION COMPLETED-              |" << std::endl;
+   std::cout << "=====================================================" << std::endl;   
+   memberMenu();
 }
