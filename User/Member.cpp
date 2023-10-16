@@ -76,7 +76,7 @@ void Member::sendRequest(std::string bikeID, int cost){
       topUp();
    }
    this->credits -= total; 
-   this->rentBikeID = bikeID; //record the rent bike id;
+   // this->rentBikeID = bikeID; //record the rent bike id;
    Request *rqst = new Request(requestid, renterid, rentbikeid,
                                startdate, enddate, rqststatus);
    rqstVect.push_back(rqst);
@@ -112,13 +112,13 @@ void Member::viewRequest(){
              << std::setw(14) << "-Status-"
              << std::endl;
    for (auto rqst : rqstVect){
-      if (rqst->rentbikeID == this->ownBikeID){ // check if bike belong to user
-         std::cout << std::setw(7) << order
-                   << std::setw(17) << rqst->renterID
-                   << std::setw(18) << rqst->startDate
-                   << std::setw(16) << rqst->endDate
-                   << std::setw(14) << rqst->rqst_status
-                   << std::endl;
+      if (rqst->rentbikeID == this->ownBikeID && rqst->rqst_status == RQST_STATUS[0]){ // check if bike belong to user
+         std::cout << std::setw(4) << order
+                  << std::setw(17) << rqst->renterID
+                  << std::setw(20) << rqst->startDate
+                  << std::setw(17) << rqst->endDate
+                  << std::setw(14) << rqst->rqst_status
+                  << std::endl;
          order++;
          track.push_back(index);
       }
@@ -133,7 +133,7 @@ void Member::viewRequest(){
    int choice3;
    switch (choice) {
    case 1:
-      choice2 = menuChoice(0,order,track);   // request want to action
+      choice2 = menuChoice(0, order, track); // request want to action
       std::cout << "Action:\t1. Accept\t2. Decline" << std::endl;
       choice3 = menuChoice(1,2);
       if (choice3 == 1){
@@ -147,10 +147,10 @@ void Member::viewRequest(){
             rqstVect.erase(rqstVect.begin()+i);
          }
       }
+      std::cout << "=====================================================" << std::endl;
+      std::cout << "|                     -COMPLETED-                   |" << std::endl;
+      std::cout << "=====================================================" << std::endl;
       saveRequestToFile(); //save request to file
-      std::cout << "=====================================================" << std::endl;
-      std::cout << "|                      COMPLETED                    |" << std::endl;
-      std::cout << "=====================================================" << std::endl;
       break;   
    case 2:  //return to member menu
       break;
@@ -192,4 +192,19 @@ void Member::topUp(){
       this->credits += std::stoi(in_credits);
       std::cout << "Correct password. Credits added successfully." << std::endl;
    }
+}
+int Member::requestCheck(){
+   for (auto rqst : rqstVect) {
+      if (rqst->renterID == this->memberID && rqst->rqst_status == RQST_STATUS[1]) {   //accepted
+         this->rentBikeID = rqst->rentbikeID;
+         std::cout << "request approved: "  << duration(rqst->startDate, rqst->endDate) << std::endl;
+         return duration (rqst->startDate, rqst->endDate);
+      }
+      if (rqst->renterID == this->memberID && (rqst->rqst_status == RQST_STATUS[2] || rqst->rqst_status == RQST_STATUS[0])) {   //declined or pending
+         this->rentBikeID = "null";
+         std::cout << "request declined/pending: "  << duration(rqst->startDate, rqst->endDate) << std::endl;
+         return 0;
+      }
+   }
+   return 0;
 }

@@ -64,7 +64,7 @@ void System::guestMenu(){
 void System::memberLoginMenu(){
    std::string username, password;
    std::cout << "=====================================================" << std::endl;
-   std::cout << "|                    -MEMBER MENU-                  |" << std::endl;
+   std::cout << "|                 -MEMBER LOGIN MENU-               |" << std::endl;
    std::cout << "=====================================================" << std::endl;   
    std::cout << "1. Member Login" <<std::endl;
    std::cout << "2. Back to main menu" << std::endl;
@@ -96,7 +96,7 @@ void System::memberLoginMenu(){
 void System::adminLoginMenu(){
  std::string username, password;
    std::cout << "=====================================================" << std::endl;
-   std::cout << "|                    -ADMIN MENU-                   |" << std::endl;
+   std::cout << "|                 -ADMIN LOGIN MENU-                |" << std::endl;
    std::cout << "=====================================================" << std::endl;
    std::cout << "1. Admin Login" << std::endl;
    std::cout << "2. Back to main menu" << std::endl;
@@ -140,7 +140,6 @@ bool System::memberLogin(std::string username, std::string password){
    for(Member *mem : memberVect){
       if (username == mem->username && password == mem->password){
          currentMember = mem;
-         currentMember->loadRequest();
          return true;
       }
    }
@@ -175,6 +174,12 @@ void System::adminMenu(){
    }
 }
 void System::memberMenu(){
+   currentMember->loadRequest();
+   for (auto bike : bikeVect) {
+      if (bike->bikeID == currentMember->rentBikeID) {
+         bike->rentDuration = currentMember->requestCheck(); // check if the request send already processed
+      }
+   }
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                    -MEMBER MENU-                  |" << std::endl;
    std::cout << "=====================================================" << std::endl;
@@ -185,7 +190,6 @@ void System::memberMenu(){
    std::cout << "5. View History" << std::endl; //view history of bike or member
    std::cout << "6. Logout" << std::endl;
    int choice = menuChoice(1,6);
-   bool flags;
    switch (choice) {
    case 1:
       rentMenu();
@@ -193,8 +197,6 @@ void System::memberMenu(){
    case 2:
       //add bike
       checkOwnBike();   //check if already have bike then action;
-      //replace current bike
-      //dont add new bike
       break;
    case 3:  
       //list/unlist bike
@@ -635,7 +637,7 @@ void System::rentMenu(){
          currentMember->rentBikeID = currentBike->bikeID;
          currentBike->showBikeInfo();
          currentMember->sendRequest(currentBike->bikeID, currentBike->rentPrice);
-
+         
          std::cout << "=====================================================" << std::endl;
          std::cout << "|                Return to MemberMenu               |" << std::endl;
          std::cout << "=====================================================" << std::endl;
@@ -806,6 +808,7 @@ void System::listBike(){
    switch (choice) {
       case 1:
          currentBike->status = BIKE_STATUS[0]; // Available
+         currentBike->rentDuration = 0;
          break;
       case 2:
          currentBike->status = BIKE_STATUS[1];  //Unavailable
