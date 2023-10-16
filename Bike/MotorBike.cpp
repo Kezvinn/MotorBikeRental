@@ -28,3 +28,28 @@ void MotorBike::showBikeInfo(){  //use to display after user added a new bike
    std::cout << "- Description: " << description << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
+void MotorBike::reviewBike(){
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                 -MOTORBIKE REVIEW-                |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::string reviewID, bikeID, comment, rating;
+   reviewID = BikeRevIDGen();  //gen new review ID
+   bikeID = this->bikeID; 
+   do {
+      std::cout << "Format: comment no special character." << std::endl;
+      std::cout << "Enter your comment: " << std::endl;
+      std::getline(std::cin, comment);
+   } while (!isComment(comment));  // char, num, special character allowed
+   do {
+      std::cout << "Format: Only number (1-10)." << std::endl;
+      std::cout << "Enter your rating: " << std::endl;
+      std::getline(std::cin, rating);
+   } while (!isFloat(rating, 1, 10));  //1-10 float
+
+   BikeReview *review = new BikeReview (reviewID, bikeID, std::stof(rating), comment);
+   bikeRevVect.push_back(review);
+   
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+}

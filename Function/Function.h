@@ -27,4 +27,7 @@ bool isYear(std::string s); // 4 num only
 bool isRent(std::string s); // int number > 0, 
 bool isDescription(std::string s); //
 bool isFloat(std::string s);
+bool isFloat(std::string s, int upper, int lower);
+
+bool isComment(std::string s);
 #endif

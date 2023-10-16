@@ -307,3 +307,24 @@ bool isFloat(std::string s) {
    }
    return true;
 }
+bool isFloat(std::string s, int upper, int lower) {
+   std::regex reg ("^[0-9. ]+$"); //only allow number
+   std::string str;
+   str = stringCut(s);
+   if (!std::regex_match(str, reg)) {
+      return false;
+   }
+   if (std::stof(s) > upper || std::stof (s) < lower ) {   //0-10
+      return false;
+   }
+   return true;
+}
+
+bool isComment (std::string s){
+   std::regex reg("^[a-zA-Z&=_'-+,<>.0-9 ]+$"); 
+   s = stringCut(s);
+   if (!std::regex_match(s, reg)) {
+      return false; 
+   } 
+   return true;
+}

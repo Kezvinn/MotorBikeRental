@@ -1,8 +1,6 @@
 #include "System.h"
 
-System::System(){
-   // std::cout << "Default System Configuration" << std::endl;
-};
+System::System(){};
 void System::mainMenu(){
    std::cout << "=====================================================" << std::endl;
    std::cout << "|             MOTORBIKE RENTAL APPLICATION          |" << std::endl;
@@ -42,7 +40,6 @@ void System::guestMenu(){
    std::cout << "2. Sign up\n";
    std::cout << "3. Return to main menu\n";
    int choice = menuChoice(1,3);
-   // std::cin.ignore(0,' ');
    switch (choice){
       case 1:
          guestViewBikes();
@@ -140,6 +137,19 @@ bool System::memberLogin(std::string username, std::string password){
    for(Member *mem : memberVect){
       if (username == mem->username && password == mem->password){
          currentMember = mem;
+         currentMember->loadRequest();
+         int value = currentMember->requestCheck();   // stored duration
+         for (int i = 0; i < bikeVect.size(); i ++){
+            if (bikeVect[i]->bikeID == currentMember->rentBikeID) {
+               bikeVect[i]->rentDuration = value;
+               if (value == 0) {
+                  bikeVect[i]->status = BIKE_STATUS[0];  // available
+               } else {
+                  bikeVect[i]->status = BIKE_STATUS[1];  // unavailable
+               }
+               
+            }
+         }
          return true;
       }
    }
@@ -174,12 +184,6 @@ void System::adminMenu(){
    }
 }
 void System::memberMenu(){
-   currentMember->loadRequest();
-   for (auto bike : bikeVect) {
-      if (bike->bikeID == currentMember->rentBikeID) {
-         bike->rentDuration = currentMember->requestCheck(); // check if the request send already processed
-      }
-   }
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                    -MEMBER MENU-                  |" << std::endl;
    std::cout << "=====================================================" << std::endl;
@@ -328,22 +332,8 @@ void System::saveMemberToFile(){
            << mem->idNumber << "|" << mem->drvNumber << "|"
            << mem->expDate << "|" << mem->memRating << "|"
            << mem->credits << "|" << mem->ownBikeID << "|"
-           << mem->rentBikeID;
-      // if (currentMember != nullptr) {  //for members
-      //    if (mem->memberID == currentMember->memberID) {
-      //       if(currentMember->ownBikeID == "null") {
-      //          file << "|null";
-      //       } else {
-      //          file << "|" << currentMember->ownBikeID;
-      //       }
-      //    } else {
-      //       file << "|" << mem->ownBikeID << "|" << mem->rentBikeID;
-      //    }
-      // } 
-      // else { //new register
-      //    file << "|" << mem->ownBikeID << "|" << mem->rentBikeID;
-      // }
-      file << "\n";
+           << mem->rentBikeID
+           << "\n";
    }
    file.close();
    // std::cout << "Members file saved successfully!" << std::endl;
@@ -476,7 +466,6 @@ void System::guestRegister(){
    std::cout << "|               -REGISTER SUCCESSFULLY-             |" << std::endl;
    std::cout << "=====================================================" << std::endl;
    mem->showMemberInfo();  //show member information
-
 }
 
 void System::adminViewBikes(){
@@ -656,7 +645,6 @@ void System::checkOwnBike(){
             currentBike = bike;
          }
       }
-      
       currentBike->showBikeInfo();
       std::cout << "Continue?" << std::endl;
       std::cout << "1. Yes, remove current bike and add new bike." << std::endl;

@@ -1,6 +1,8 @@
 #ifndef MOTORBIKE_H
 #define MOTORBIKE_H
 #include <bits/stdc++.h>
+#include "../Review/BikeReview.h"
+#include "../Function/Function.h"
 std::string static LOCATION[3] = {"HN", "DN", "SG"};
 std::string static BIKE_STATUS[2] = {"Available", "Unavailable"};
 std::string static MODE[3] = {"Auto", "Manual", "Semi"};
@@ -8,7 +10,7 @@ class MotorBike{
    private:
       std::string bikeID;  //auto-generated
       float bikeRating;
-      // std::string comment;
+      std::vector <BikeReview*> bikeRevVect;
    public:
       std::string model;
       std::string color;
@@ -20,7 +22,9 @@ class MotorBike{
       int rentPrice;
       float memRating; 
       int rentDuration; //how many date the bike being rented
-      std::string status; // bike being listed or not
+      //availalbe = when owner list bike for rent
+      //unavailable = when owner unlist bike for rent/ bike on rent 
+      std::string status; // bike being listed or not (available/unavailable)
       MotorBike();
       MotorBike(std::string i_bikeID, std::string i_model, std::string i_color,
                 int i_engineSize, std::string i_mode, std::string i_yearMade,
@@ -28,6 +32,7 @@ class MotorBike{
                 float i_memRating, std::string i_status, int i_rentDuration,
                 std::string i_description);
       void showBikeInfo();
+      void reviewBike();
       friend class System;
 };
 std::string bikeIDGenerate();

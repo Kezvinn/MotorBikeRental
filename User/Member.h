@@ -3,7 +3,7 @@
 #include <bits/stdc++.h>
 #include "User.h"
 #include "../Request/Request.h"
-#include "../Rating/Rating.h"
+#include "../Review/MemReview.h"
 #include "../Function/Function.h"
 #define REQUEST_FILE "Data/Request.txt"
 
@@ -26,8 +26,8 @@ class Member : public User {
       std::string ownBikeID = "null";
       std::string rentBikeID = "null";
 
-      std::vector <Request*> rqstVect;
-      std::vector <Rating*> ratingVect;   //rating vectors
+      std::vector <Request*> rqstVect; //request list
+      std::vector <MemReview*> memRevVect;   // all review of the member
       Request *currentRequest = nullptr;
    public:
       Member();
@@ -43,6 +43,7 @@ class Member : public User {
       void viewRequest();  //choose which requst to accept
       void topUp();  // add credits into accout
       int requestCheck(); //check if request sent is accepted or declined
+      void reviewMember(); //leave comment and rating for member
       friend class System;
 };
 std::string memIDGenerate();

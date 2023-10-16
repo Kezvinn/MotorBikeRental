@@ -196,15 +196,41 @@ void Member::topUp(){
 int Member::requestCheck(){
    for (auto rqst : rqstVect) {
       if (rqst->renterID == this->memberID && rqst->rqst_status == RQST_STATUS[1]) {   //accepted
-         this->rentBikeID = rqst->rentbikeID;
-         std::cout << "request approved: "  << duration(rqst->startDate, rqst->endDate) << std::endl;
-         return duration (rqst->startDate, rqst->endDate);
+         this->rentBikeID = rqst->rentbikeID;   // set rentbikeID
+         std::cout << "request approved: " << duration(rqst->startDate, rqst->endDate) << std::endl;
+         return duration (rqst->startDate, rqst->endDate);  // return duration
       }
       if (rqst->renterID == this->memberID && (rqst->rqst_status == RQST_STATUS[2] || rqst->rqst_status == RQST_STATUS[0])) {   //declined or pending
-         this->rentBikeID = "null";
+         this->rentBikeID = "null"; //set rentbikeID is 'null' request is still pending or being declined
          std::cout << "request declined/pending: "  << duration(rqst->startDate, rqst->endDate) << std::endl;
          return 0;
       }
    }
    return 0;
+}
+
+void Member::reviewMember(){
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                   -MEMBER REVIEW-                 |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::string reviewID, memID, comment, rating;
+   reviewID = MemRevIDGen();  //gen new review ID
+   memID = this->memberID; 
+   do {
+      std::cout << "Format: comment no special character." << std::endl;
+      std::cout << "Enter your comment: " << std::endl;
+      std::getline(std::cin, comment);
+   } while (!isComment(comment));  // char, num, special character allowed
+   do {
+      std::cout << "Format: Only number (1-10)." << std::endl;
+      std::cout << "Enter your rating: " << std::endl;
+      std::getline(std::cin, rating);
+   } while (!isFloat(rating, 1, 10));  //1-10 float
+
+   MemReview *review = new MemReview (reviewID, memID, std::stof(rating), comment);
+   memRevVect.push_back(review);
+   
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
 }

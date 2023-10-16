@@ -6,16 +6,18 @@
 #include "../User/Member.h"
 #include "../User/Admin.h"
 #include "../Bike/MotorBike.h"
+#include "../Date/Date.h"
 
 #define MEMBER_FILE "Data/Member.txt"
 #define BIKE_FILE "Data/Bike.txt"
 #define ADMIN_FILE "Data/Admin.txt"
 
+#define TODAY_DATE "22/12/2023"
+
 class System {
    private:
       std::vector <Member*> memberVect;
       std::vector <MotorBike*> bikeVect;
-
       Admin *admin;
       Member *currentMember = nullptr;  //pointer to current member
       MotorBike *currentBike = nullptr; //pointer to current motorbike
