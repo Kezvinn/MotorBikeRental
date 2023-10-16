@@ -16,8 +16,8 @@
 
 class System {
    private:
-      std::vector <Member*> memberVect;
-      std::vector <MotorBike*> bikeVect;
+      std::vector <Member*> memberVect;   //all member
+      std::vector <MotorBike*> bikeVect;  // all bike
       Admin *admin;
       Member *currentMember = nullptr;  //pointer to current member
       MotorBike *currentBike = nullptr; //pointer to current motorbike

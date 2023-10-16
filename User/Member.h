@@ -1,16 +1,19 @@
 #ifndef MEMBER_H
 #define MEMBER_H
 #include <bits/stdc++.h>
+
 #include "User.h"
 #include "../Request/Request.h"
 #include "../Review/MemReview.h"
 #include "../Function/Function.h"
+
 #define REQUEST_FILE "Data/Request.txt"
+#define MEM_REV_FILE "Data/MemRev.txt"
 
 #define INITIAL_MEM_RATING 10.0
 #define INITIAL_CREDITS 20
 
-std::string static ID_TYPE[3] = {"CitizenID", "Passport"};
+std::string static ID_TYPE[2] = {"CitizenID", "Passport"};
 
 class Member : public User {
    private:
@@ -36,6 +39,7 @@ class Member : public User {
              std::string i_idType, std::string i_idNumber, std::string i_drvNumber,
              std::string i_expDate, float i_memRating, int i_credits,
              std::string i_ownBikeID, std::string i_rentBikeID);
+   
       void showMemberInfo();  // show member info
       void sendRequest(std::string bikeID, int cost);  // get dates and create request
       void loadRequest();  //get all request from file txt
@@ -44,7 +48,10 @@ class Member : public User {
       void topUp();  // add credits into accout
       int requestCheck(); //check if request sent is accepted or declined
       void reviewMember(); //leave comment and rating for member
+      float memRatingCal();   // calculate average mem rating
+   
       friend class System;
 };
+
 std::string memIDGenerate();
 #endif // MEMBER_H

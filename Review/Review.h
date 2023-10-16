@@ -7,5 +7,7 @@ class Review{
       std::string comment;
    public:
       Review(float i_score, std::string i_comment);
+      friend class MemReview;
+      friend class BikeReview;
 };
 #endif

@@ -1,8 +1,10 @@
 #ifndef MOTORBIKE_H
 #define MOTORBIKE_H
+
 #include <bits/stdc++.h>
 #include "../Review/BikeReview.h"
 #include "../Function/Function.h"
+
 std::string static LOCATION[3] = {"HN", "DN", "SG"};
 std::string static BIKE_STATUS[2] = {"Available", "Unavailable"};
 std::string static MODE[3] = {"Auto", "Manual", "Semi"};
@@ -31,10 +33,13 @@ class MotorBike{
                 float i_bikeRating, int i_rentPrice, std::string i_location,
                 float i_memRating, std::string i_status, int i_rentDuration,
                 std::string i_description);
-      void showBikeInfo();
-      void reviewBike();
+      
+      void showBikeInfo(); //show bike information
+      void reviewBike();   // rate and comment bike
+      float bikeratingCal();  //calculate bike rating
+      
       friend class System;
 };
-std::string bikeIDGenerate();
 
+std::string bikeIDGenerate();
 #endif // MOTORBIKE_H

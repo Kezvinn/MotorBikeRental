@@ -228,9 +228,17 @@ void Member::reviewMember(){
    } while (!isFloat(rating, 1, 10));  //1-10 float
 
    MemReview *review = new MemReview (reviewID, memID, std::stof(rating), comment);
-   memRevVect.push_back(review);
-   
+   memRevVect.push_back(review);   
+   this->memRating = memRatingCal();   //calculate new rating for member
    std::cout << "=====================================================" << std::endl;
    std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
    std::cout << "=====================================================" << std::endl;
+}
+
+float Member::memRatingCal(){
+   float total;
+   for (int i = 0; i < memRevVect.size(); i++) {
+      total += memRevVect[i]->score;
+   }
+   return total/memRevVect.size();
 }

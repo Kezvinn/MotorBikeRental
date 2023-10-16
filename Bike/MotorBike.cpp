@@ -48,8 +48,16 @@ void MotorBike::reviewBike(){
 
    BikeReview *review = new BikeReview (reviewID, bikeID, std::stof(rating), comment);
    bikeRevVect.push_back(review);
-   
+   this->bikeRating = bikeratingCal();
    std::cout << "=====================================================" << std::endl;
    std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
    std::cout << "=====================================================" << std::endl;
+}
+
+float MotorBike::bikeratingCal(){
+   float total;
+   for (int i = 0; i < bikeRevVect.size(); i++) {
+      bikeRevVect[i]->score;
+   }
+   return total/bikeRevVect.size();
 }

@@ -2,7 +2,7 @@
 #define BIKEREVIEW_H
 #include <bits/stdc++.h>
 #include "Review.h"
-class BikeReview : public Review{
+class BikeReview : public Review {
    private:
       std::string bikeReviewID;
       std::string bikeID;
