@@ -8,6 +8,7 @@ class MemReview : public Review {
       std::string memID;
    public:
       MemReview(std::string i_memReviewID, std::string i_memID, float i_score, std::string i_comment);
+      void showMemRev();   //display member review
 };
 std::string MemRevIDGen();
 #endif

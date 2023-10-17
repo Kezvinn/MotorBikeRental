@@ -15,6 +15,8 @@
 
 std::string static ID_TYPE[2] = {"CitizenID", "Passport"};
 
+#define TODAY_DATE "21/12/2023"
+
 class Member : public User {
    private:
       std::string fullName;
@@ -46,10 +48,15 @@ class Member : public User {
       void saveRequestToFile();  //save request to file txt
       void viewRequest();  //choose which requst to accept
       void topUp();  // add credits into accout
-      int requestCheck(); //check if request sent is accepted or declined
+      int rentDuration(); //check for accepted request and return duration
+      
       void reviewMember(); //leave comment and rating for member
+      std::string requestCheck();   //check status and return renterID
+
       float memRatingCal();   // calculate average mem rating
-   
+
+      // std::string get_renterID();
+      // std::string get_rentBikeID();
       friend class System;
 };
 

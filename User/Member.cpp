@@ -38,7 +38,8 @@ void Member::sendRequest(std::string bikeID, int cost){
    requestid = rqstIDGenerate();
    renterid = this->memberID;
    rqststatus = RQST_STATUS[0];  //pending by default
-   rentbikeid = bikeID; 
+   rentbikeid = "null"; //still null
+
    do{
       do {
          std::cout << "Format: DD/MM/YYYY" << std::endl;
@@ -102,6 +103,13 @@ void Member::loadRequest(){
 }
 
 void Member::viewRequest(){
+   //delete request if overtime 
+   for (int i = 0; i < rqstVect.size(); i++) {
+      if ((duration(TODAY_DATE, rqstVect[i]->startDate) <= 0) && rqstVect[i]->rqst_status == RQST_STATUS[0]){
+         rqstVect.erase(rqstVect.begin()+i);
+      }
+   }
+
    int index = 0, order = 0;
    std::vector<int> track;
    std::cout << "=====================================================" << std::endl;
@@ -141,12 +149,7 @@ void Member::viewRequest(){
       } else if (choice3 == 2){
          rqstVect[choice2]->rqst_status = RQST_STATUS[2];   //declined
       }
-      //delete the other request for the same bike
-      for (int i = 0; i < rqstVect.size(); i++) {
-         if (rqstVect[i]->rentbikeID == rqstVect[choice2]->rentbikeID && rqstVect[i]->rqst_status == RQST_STATUS[0]){
-            rqstVect.erase(rqstVect.begin()+i);
-         }
-      }
+
       std::cout << "=====================================================" << std::endl;
       std::cout << "|                     -COMPLETED-                   |" << std::endl;
       std::cout << "=====================================================" << std::endl;
@@ -193,18 +196,12 @@ void Member::topUp(){
       std::cout << "Correct password. Credits added successfully." << std::endl;
    }
 }
-int Member::requestCheck(){   //check status and return the duration 
+
+int Member::rentDuration(){   //check status and return the duration 
    for (auto rqst : rqstVect) {
-      
       if (rqst->renterID == this->memberID && rqst->rqst_status == RQST_STATUS[1]) {   //accepted
          this->rentBikeID = rqst->rentbikeID;   // set rentbikeID
-         // std::cout << "request approved: " << duration(rqst->startDate, rqst->endDate) << std::endl;
          return duration (rqst->startDate, rqst->endDate);  // return duration
-      }
-      if (rqst->renterID == this->memberID && (rqst->rqst_status == RQST_STATUS[2] || rqst->rqst_status == RQST_STATUS[0])) {   //declined or pending
-         this->rentBikeID = "null"; //set rentbikeID is 'null' request is still pending or being declined
-         // std::cout << "request declined/pending: "  << duration(rqst->startDate, rqst->endDate) << std::endl;
-         return 0;
       }
    }
    return 0;
@@ -214,23 +211,26 @@ void Member::reviewMember(){
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                   -MEMBER REVIEW-                 |" << std::endl;
    std::cout << "=====================================================" << std::endl;
+   std::cin.ignore();
    std::string reviewID, memID, comment, rating;
    reviewID = MemRevIDGen();  //gen new review ID
-   memID = this->memberID; 
+   memID = this->memberID;
+
    do {
       std::cout << "Format: comment no special character." << std::endl;
-      std::cout << "Enter your comment: " << std::endl;
+      std::cout << "Enter your comment: ";
       std::getline(std::cin, comment);
    } while (!isComment(comment));  // char, num, special character allowed
    do {
       std::cout << "Format: Only number (1-10)." << std::endl;
-      std::cout << "Enter your rating: " << std::endl;
+      std::cout << "Enter your rating: ";
       std::getline(std::cin, rating);
-   } while (!isFloat(rating, 1, 10));  //1-10 float
+   } while (!isFloat(rating, 1.0, 10.0));  //1-10 float
 
    MemReview *review = new MemReview (reviewID, memID, std::stof(rating), comment);
    memRevVect.push_back(review);   
    this->memRating = memRatingCal();   //calculate new rating for member
+   review->showMemRev();
    std::cout << "=====================================================" << std::endl;
    std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
    std::cout << "=====================================================" << std::endl;
@@ -242,4 +242,27 @@ float Member::memRatingCal(){
       total += memRevVect[i]->get_score();
    }
    return total/memRevVect.size();
+}
+
+std::string Member::requestCheck () {
+   for (auto rqst: rqstVect){
+      if (rqst->rqst_status == RQST_STATUS[0] || rqst->rqst_status == RQST_STATUS[2]){ // pending/declined
+         this->rentBikeID = "null";
+      }
+      if (rqst->rqst_status == RQST_STATUS[1]){ //accepted
+         this->rentBikeID = rqst->rentbikeID;   //save rent bike id into member
+         if (rqst->endDate != TODAY_DATE) {  //date up
+           return rqst->renterID;
+            // reviewMember();   
+         }
+      }
+   }
+
+   //check status
+      // approved -> save rentbikeID
+      // declined/pending -> rentbikeID = 'null'
+   //check return date
+      //return_day == today
+         //(renter) -> review bike (look for bikeID == )
+         //(owner) -> review renter (look for renter)
 }

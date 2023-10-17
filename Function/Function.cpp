@@ -307,7 +307,7 @@ bool isFloat(std::string s) {
    }
    return true;
 }
-bool isFloat(std::string s, int upper, int lower) {
+bool isFloat(std::string s, float lower, float upper) {
    std::regex reg ("^[0-9. ]+$"); //only allow number
    std::string str;
    str = stringCut(s);

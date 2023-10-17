@@ -138,11 +138,11 @@ bool System::memberLogin(std::string username, std::string password){
       if (username == mem->get_username() && password == mem->get_password()){
          currentMember = mem;
          currentMember->loadRequest();
-         int value = currentMember->requestCheck();   // stored duration
+         int value = currentMember->rentDuration();   // get duration
          for (int i = 0; i < bikeVect.size(); i ++){
             if (bikeVect[i]->bikeID == currentMember->rentBikeID) {
-               bikeVect[i]->rentDuration = value;
-               if (value == 0) {
+               bikeVect[i]->rentDuration = value;  //save duration   
+               if (value == 0) { //write status into bike
                   bikeVect[i]->status = BIKE_STATUS[0];  // available
                } else {
                   bikeVect[i]->status = BIKE_STATUS[1];  // unavailable
@@ -187,18 +187,19 @@ void System::memberMenu(){
    //if the date is up -> do review
    //how to know when the date is up -> request info
    //current member hold requests
-   //run request 
-   
+   //run request from current member
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                    -MEMBER MENU-                  |" << std::endl;
    std::cout << "=====================================================" << std::endl;
-   std::cout << "1. Rent Motorbikes" << std::endl; //view bike to rent
-   std::cout << "2. Add motorbike" << std::endl;   // addbike to member
-   std::cout << "3. List/Unlist motorbikes" << std::endl; //list or unlist motorbikes
-   std::cout << "4. View Request" << std::endl; //view upcoming requests
-   std::cout << "5. View History" << std::endl; //view history of bike or member
-   std::cout << "6. Logout" << std::endl;
-   int choice = menuChoice(1,6);
+   std::cout << "1. Rent Motorbikes." << std::endl; //view bike to rent
+   std::cout << "2. Add motorbike." << std::endl;   // addbike to member
+   std::cout << "3. List/Unlist motorbikes." << std::endl; //list or unlist motorbikes
+   std::cout << "4. View Request." << std::endl; //view upcoming requests
+   std::cout << "5. View History." << std::endl; //view history of bike or member
+   std::cout << "6. Review Member." << std::endl;
+   std::cout << "7. Review Bike."   <<std::endl;
+   std::cout << "8. Logout" << std::endl;
+   int choice = menuChoice(1,8);
    switch (choice) {
    case 1:
       rentMenu();
@@ -220,6 +221,12 @@ void System::memberMenu(){
       //view history
       break;
    case 6:
+      check();
+      break;
+   case 7: 
+   
+      break;
+   case 8:
       saveMemberToFile();
       saveBikesToFile();
       std::cout << "=====================================================" << std::endl;
@@ -832,4 +839,12 @@ void System::reviewRentedBike(){
 }
 void System::reviewRenter(){
    currentMember->reviewMember();
+}
+
+void System::check(){
+   for (auto mem : memberVect) {
+      if (mem->memberID == currentMember->requestCheck()){
+         mem->reviewMember();
+      }
+   }
 }

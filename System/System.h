@@ -12,7 +12,7 @@
 #define BIKE_FILE "Data/Bike.txt"
 #define ADMIN_FILE "Data/Admin.txt"
 
-#define TODAY_DATE "17/10/2023"
+// #define TODAY_DATE "12/12/2023"
 
 class System {
    private:
@@ -56,6 +56,8 @@ class System {
       void checkOwnBike();
       void reviewRentedBike();   // review when return date match with today date
       void reviewRenter(); // revew when return date match with today date
+      
+      void check();
       // void viewHistory();
       
 };
