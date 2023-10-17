@@ -3,13 +3,13 @@
 System::System(){};
 void System::mainMenu(){
    std::cout << "=====================================================" << std::endl;
-   std::cout << "|             MOTORBIKE RENTAL APPLICATION          |" << std::endl;
+   std::cout << "|            -MOTORBIKE RENTAL APPLICATION-         |" << std::endl;
    std::cout << "=====================================================" << std::endl;
    
    std::cout << "Creator: Nhat Nguyen" << std::endl;
    std::cout << "Use the app as:" << std::endl; 
-   std::cout << "1. Guest\t2. Member\t3. Admin" << std::endl; 
-   int choice = menuChoice(1,3);
+   std::cout << "1. Guest.\t2. Member.\t3. Admin.\t4. Exit." << std::endl; 
+   int choice = menuChoice(1,4);
    switch (choice){
       case 1:
          guestMenu();
@@ -24,7 +24,7 @@ void System::mainMenu(){
          std::cout << "=====================================================" << std::endl;
          std::cout << "|                THANK YOU FOR USING!               |" << std::endl;
          std::cout << "=====================================================" << std::endl;
-   
+         break;
    }
 }
 
@@ -125,9 +125,9 @@ void System::adminLoginMenu(){
       break;
    }
 }
-
+//login function
 bool System::adminLogin(std::string username, std::string password){
-   if (username == this->admin->username && password == this->admin->password){
+   if (username == this->admin->get_username() && password == this->admin->get_password()){
       return true;
    } else {
       return false;
@@ -135,7 +135,7 @@ bool System::adminLogin(std::string username, std::string password){
 }
 bool System::memberLogin(std::string username, std::string password){
    for(Member *mem : memberVect){
-      if (username == mem->username && password == mem->password){
+      if (username == mem->get_username() && password == mem->get_password()){
          currentMember = mem;
          currentMember->loadRequest();
          int value = currentMember->requestCheck();   // stored duration
@@ -184,6 +184,11 @@ void System::adminMenu(){
    }
 }
 void System::memberMenu(){
+   //if the date is up -> do review
+   //how to know when the date is up -> request info
+   //current member hold requests
+   //run request 
+   
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                    -MEMBER MENU-                  |" << std::endl;
    std::cout << "=====================================================" << std::endl;
@@ -223,7 +228,7 @@ void System::memberMenu(){
       break;
    }
 }
-
+//input function
 void System::loadMembers(){
    memberVect.clear();
    std::string line;
@@ -286,7 +291,7 @@ void System::loadAdmin(){
    // std::cout << "Admin file loaded" << std::endl;
    file.close();
 }
-
+//output function
 void System::saveBikesToFile(){
    if (currentBike != nullptr){
       for(auto b : bikeVect) {
@@ -326,8 +331,8 @@ void System::saveMemberToFile(){
       return;
    }
    for (auto mem : memberVect) {
-      file << mem->memberID << "|" << mem->username << "|"
-           << mem->password << "|" << mem->fullName << "|"
+      file << mem->memberID << "|" << mem->get_username() << "|"
+           << mem->get_password() << "|" << mem->fullName << "|"
            << mem->phoneNumber << "|" << mem->idType << "|"
            << mem->idNumber << "|" << mem->drvNumber << "|"
            << mem->expDate << "|" << mem->memRating << "|"
@@ -338,7 +343,16 @@ void System::saveMemberToFile(){
    file.close();
    // std::cout << "Members file saved successfully!" << std::endl;
 }
-
+void System::saveAdminToFile(){
+   std::ofstream file {ADMIN_FILE};
+   if (!file){
+      std::cerr << "Could't open 'Admin.txt' file." << std::endl;
+   }
+   file << this->admin->get_username() << "|" << this->admin->get_password();
+   file.close();
+   std::cout << "Admin file saved successfully!" <<std::endl;
+}
+//guest function
 void System::guestViewBikes(){
    int index = 1;
    std::cout << "Motorbikes in the System" <<std::endl;
@@ -467,7 +481,7 @@ void System::guestRegister(){
    std::cout << "=====================================================" << std::endl;
    mem->showMemberInfo();  //show member information
 }
-
+//admin function
 void System::adminViewBikes(){
    loadBikes();
    int index = 1;
@@ -519,7 +533,7 @@ void System::adminViewMembers(){
              << std::endl;
    for (auto mem : memberVect) {
       std::cout << std::setw(4) << index << std::setw(17) << mem->memberID
-                  << std::setw(16) << mem->username << std::setw(18) << mem->password
+                  << std::setw(16) << mem->get_username() << std::setw(18) << mem->get_password()
                   << std::setw(19) << mem->fullName << std::setw(15) << mem->phoneNumber
                   << std::setw(14) << mem->idType << std::setw(18) << mem->idNumber
                   << std::setw(11) << mem->credits << std::setw(16) << mem->memRating
@@ -544,7 +558,7 @@ void System::adminViewMembers(){
          break;
    }
 }
-
+//member functions
 void System::rentMenu(){
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                     -RENT MENU-                   |" << std::endl;
@@ -806,4 +820,16 @@ void System::listBike(){
    std::cout << "|                   -ACTION COMPLETED-              |" << std::endl;
    std::cout << "=====================================================" << std::endl;   
    memberMenu();
+}
+//review and rating
+void System::reviewRentedBike(){
+   for (auto bike : bikeVect){
+      if (bike->bikeID == currentMember->rentBikeID) {   
+         currentBike = bike;
+         currentBike->reviewBike();
+      }
+   }
+}
+void System::reviewRenter(){
+   currentMember->reviewMember();
 }

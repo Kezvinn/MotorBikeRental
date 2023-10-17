@@ -328,3 +328,10 @@ bool isComment (std::string s){
    } 
    return true;
 }
+// bool dateCheck(std::string s){   //check date for 
+//    if (duration (TODAY_DATE, s) < 0) {
+//       std::cerr << "Date in the past." << std::endl;
+//       return false;
+//    }  
+//    return true;
+// }

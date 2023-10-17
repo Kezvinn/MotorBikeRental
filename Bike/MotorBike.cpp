@@ -57,7 +57,7 @@ void MotorBike::reviewBike(){
 float MotorBike::bikeratingCal(){
    float total;
    for (int i = 0; i < bikeRevVect.size(); i++) {
-      bikeRevVect[i]->score;
+      bikeRevVect[i]->get_score();
    }
    return total/bikeRevVect.size();
 }

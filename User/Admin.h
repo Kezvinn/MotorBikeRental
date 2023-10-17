@@ -4,7 +4,7 @@
 #include "User.h"
 class Admin : public User {
    public:
-      Admin();
+      // Admin();
       Admin(std::string adUsername, std::string adPassword);
       friend class System;
 };

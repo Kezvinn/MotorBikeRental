@@ -7,8 +7,10 @@ class User {
       std::string password;
    public:
       User(std::string i_username, std::string i_password);
-      friend class System;
-      friend class Member;
+      std::string get_username();
+      std::string get_password();
+      // friend class System;
+      // friend class Member;
 };
 
 #endif // USER_H

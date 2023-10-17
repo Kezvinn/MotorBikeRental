@@ -6,9 +6,7 @@ std::string memIDGenerate(){
    return ("M-" + std::to_string(num));
 }
 
-Member::Member(){
-   std::cout << "Member default constructor" << std::endl;
-};
+// Member::Member() {};
 Member::Member(std::string i_memberID, std::string i_memUsername, std::string i_memPassword,
                std::string i_fullname, std::string i_phoneNumber,
                std::string i_idType, std::string i_idNumber, std::string i_drvNumber,
@@ -86,6 +84,7 @@ void Member::sendRequest(std::string bikeID, int cost){
    std::cout << "|              REQUEST SENT SUCCESSFULLY            |" << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
+//input
 void Member::loadRequest(){
    rqstVect.clear();
    std::ifstream file{REQUEST_FILE};
@@ -101,6 +100,7 @@ void Member::loadRequest(){
       rqstVect.push_back(rqst);
    }
 }
+
 void Member::viewRequest(){
    int index = 0, order = 0;
    std::vector<int> track;
@@ -188,21 +188,22 @@ void Member::topUp(){
    std::string pass;
    std::cout << "Enter your password: ";
    std::getline(std::cin, pass);
-   if (pass == this->password) {
+   if (pass == this->get_password()) {
       this->credits += std::stoi(in_credits);
       std::cout << "Correct password. Credits added successfully." << std::endl;
    }
 }
-int Member::requestCheck(){
+int Member::requestCheck(){   //check status and return the duration 
    for (auto rqst : rqstVect) {
+      
       if (rqst->renterID == this->memberID && rqst->rqst_status == RQST_STATUS[1]) {   //accepted
          this->rentBikeID = rqst->rentbikeID;   // set rentbikeID
-         std::cout << "request approved: " << duration(rqst->startDate, rqst->endDate) << std::endl;
+         // std::cout << "request approved: " << duration(rqst->startDate, rqst->endDate) << std::endl;
          return duration (rqst->startDate, rqst->endDate);  // return duration
       }
       if (rqst->renterID == this->memberID && (rqst->rqst_status == RQST_STATUS[2] || rqst->rqst_status == RQST_STATUS[0])) {   //declined or pending
          this->rentBikeID = "null"; //set rentbikeID is 'null' request is still pending or being declined
-         std::cout << "request declined/pending: "  << duration(rqst->startDate, rqst->endDate) << std::endl;
+         // std::cout << "request declined/pending: "  << duration(rqst->startDate, rqst->endDate) << std::endl;
          return 0;
       }
    }
@@ -238,7 +239,7 @@ void Member::reviewMember(){
 float Member::memRatingCal(){
    float total;
    for (int i = 0; i < memRevVect.size(); i++) {
-      total += memRevVect[i]->score;
+      total += memRevVect[i]->get_score();
    }
    return total/memRevVect.size();
 }

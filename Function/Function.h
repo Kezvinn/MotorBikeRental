@@ -1,7 +1,6 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 #include <bits/stdc++.h>
-
 int menuChoice(int start, int end);
 int menuChoice(int start, int end, std::vector<int> track);
 //for member registration
@@ -30,4 +29,6 @@ bool isFloat(std::string s);
 bool isFloat(std::string s, int upper, int lower);
 
 bool isComment(std::string s);
+
+bool dateCheck(std::string s);
 #endif
