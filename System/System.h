@@ -55,9 +55,7 @@ class System {
 
       void checkOwnBike();
       void reviewRentedBike();   // review when return date match with today date
-      void reviewRenter(); // revew when return date match with today date
-      
-      void check();
+      void memRevMenu();
       // void viewHistory();
       
 };

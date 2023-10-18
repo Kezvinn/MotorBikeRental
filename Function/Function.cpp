@@ -27,7 +27,7 @@ int menuChoice(int start, int end,std::vector<int> track) {
    bool flag;
    std::string tempo;
    do{
-      std::cout << "Enter your bike choice: ";
+      std::cout << "Enter index: ";
       std::cin >> tempo;
       // std::cin.ignore();
       if (!numValid(tempo)){   //check if the input is number

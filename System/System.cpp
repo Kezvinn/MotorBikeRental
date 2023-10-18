@@ -138,6 +138,7 @@ bool System::memberLogin(std::string username, std::string password){
       if (username == mem->get_username() && password == mem->get_password()){
          currentMember = mem;
          currentMember->loadRequest();
+         currentMember->loadMemRev();
          int value = currentMember->rentDuration();   // get duration
          for (int i = 0; i < bikeVect.size(); i ++){
             if (bikeVect[i]->bikeID == currentMember->rentBikeID) {
@@ -184,10 +185,6 @@ void System::adminMenu(){
    }
 }
 void System::memberMenu(){
-   //if the date is up -> do review
-   //how to know when the date is up -> request info
-   //current member hold requests
-   //run request from current member
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                    -MEMBER MENU-                  |" << std::endl;
    std::cout << "=====================================================" << std::endl;
@@ -204,31 +201,32 @@ void System::memberMenu(){
    case 1:
       rentMenu();
       break;
-   case 2:
-      //add bike
+   case 2:  //add bike
       checkOwnBike();   //check if already have bike then action;
       break;
-   case 3:  
-      //list/unlist bike
+   case 3:  //list/unlist bike
+
       listBike();
       break;
-   case 4:  
-      //view request
+   case 4:  //view request
+
       currentMember->viewRequest(); 
       memberMenu();
       break;
-   case 5:
-      //view history
+   case 5:  //view history
+
       break;
-   case 6:
-      check();
+   case 6: //review member(renter) 
+      memRevMenu();
       break;
-   case 7: 
-   
+   case 7:  //review bike (rented bike)
+
       break;
    case 8:
       saveMemberToFile();
       saveBikesToFile();
+      currentMember->saveRequestToFile();
+      currentMember->saveMemRevToFile();
       std::cout << "=====================================================" << std::endl;
       std::cout << "|               -THANK YOU FOR USING-               |" << std::endl;
       std::cout << "=====================================================" << std::endl;
@@ -584,15 +582,16 @@ void System::rentMenu(){
              << std::setw(18) << "-Descripton-" << std::endl;
    switch (choice) {
       case 1:
+         // std::cout << "Got to case 1" << std::endl;
          for(MotorBike *bike: bikeVect){
          if (bike->location == LOCATION[0] && bike->status == BIKE_STATUS[0] &&
              bike->bikeID != currentMember->ownBikeID && bike->memRating <= currentMember->memRating) { // HN/Available/not own bike/ qualify with rating
             std::cout << std::setw(4) << order << std::setw(16) << bike->bikeID
-                << std::setw(14) << bike->model << std::setw(13) << bike->color
-                << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
-                << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
-                << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
-                << std::setw(21) << bike->description << std::endl;
+                      << std::setw(14) << bike->model << std::setw(13) << bike->color
+                      << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
+                      << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
+                      << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
+                      << std::setw(21) << bike->description << std::endl;
             order++;
             track.push_back(index);
          }
@@ -644,13 +643,11 @@ void System::rentMenu(){
       case 1:
          choice3 = menuChoice(0,order,track);
          currentBike = bikeVect[choice3];
-         currentMember->rentBikeID = currentBike->bikeID;
+         // currentMember->rentBikeID = currentBike->bikeID;
          currentBike->showBikeInfo();
          currentMember->sendRequest(currentBike->bikeID, currentBike->rentPrice);
          
-         std::cout << "=====================================================" << std::endl;
-         std::cout << "|                Return to MemberMenu               |" << std::endl;
-         std::cout << "=====================================================" << std::endl;
+         std::cout << "Return to Member Menu." << std::endl;
          memberMenu();
          break;
       case 2:
@@ -837,14 +834,59 @@ void System::reviewRentedBike(){
       }
    }
 }
-void System::reviewRenter(){
-   currentMember->reviewMember();
-}
 
-void System::check(){
-   for (auto mem : memberVect) {
-      if (mem->memberID == currentMember->requestCheck()){
-         mem->reviewMember();
+void System::memRevMenu(){ 
+   std::vector<std::string> renter; //string vector to collect renter id
+   currentMember->getRenter(renter);   //revtrieve all renter
+   int index = 0, order = 0;
+   std::vector<int> track;
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                 -REVIEW RENTER MENU-              |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cin.ignore();
+   std::cout << "1. View all Renters." << std::endl;
+   std::cout << "2. Return to Member Menu." << std::endl;   
+   int choice = menuChoice(1,2);
+   std::cout << "=====================================================" << std::endl;
+   switch (choice) {
+   case 1:
+      std::cout << std::setw(7) << "-Index-" << std::setw(17) << "-Full Name-"
+                << std::setw(14) << "-Rating-" << std::endl;
+      for (int i = 0; i < renter.size(); i++) {
+         for(auto mem : memberVect){
+            if (renter[i] == mem->memberID){
+               std::cout << std::setw(4) << index << std::setw(19) << mem->fullName
+                           << std::setw(16) << mem->memRating << std::endl;
+               order++;
+               track.push_back(index);
+            }
+            index++;
+         }      
       }
+      break;
+   case 2:
+      memberMenu();
+      break;
    }
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "Continue. " <<std::endl;
+   std::cout << "1. Choose Renter to review." <<std::endl;
+   std::cout << "2. Return to Review Menu." << std::endl;
+   int choice2 = menuChoice(1,2);
+   int choice3;
+   std::cout << "=====================================================" << std::endl;
+   switch (choice2) {
+   case 1:
+      choice3 = menuChoice(0, order, track);
+      currentMember->reviewMember(renter[choice3]);   
+      break;
+   
+   case 2:
+      memRevMenu();  
+      break;
+   }
+
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|            -THANK YOU FOR YOUR REVIEW-            |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
 }

@@ -15,7 +15,7 @@
 
 std::string static ID_TYPE[2] = {"CitizenID", "Passport"};
 
-#define TODAY_DATE "21/12/2023"
+#define TODAY_DATE "17/10/2023"
 
 class Member : public User {
    private:
@@ -44,17 +44,21 @@ class Member : public User {
    
       void showMemberInfo();  // show member info
       void sendRequest(std::string bikeID, int cost);  // get dates and create request
+      
       void loadRequest();  //get all request from file txt
+      void loadMemRev();
       void saveRequestToFile();  //save request to file txt
+      void saveMemRevToFile(); //save member review to file txt
       void viewRequest();  //choose which requst to accept
       void topUp();  // add credits into accout
       int rentDuration(); //check for accepted request and return duration
       
-      void reviewMember(); //leave comment and rating for member
-      std::string requestCheck();   //check status and return renterID
+      void reviewMember(std::string renterID); //leave comment and rating for member
+      bool requestCheck();   //check status and save rentbikeid if request accepted
 
       float memRatingCal();   // calculate average mem rating
 
+      std::vector<std::string> getRenter(std::vector<std::string> &storage); // retrieve approved requestest renter ID for review
       // std::string get_renterID();
       // std::string get_rentBikeID();
       friend class System;
