@@ -6,7 +6,6 @@
 #include "../User/Member.h"
 #include "../User/Admin.h"
 #include "../Bike/MotorBike.h"
-#include "../Date/Date.h"
 //txt files
 #define MEMBER_FILE "Data/Member.txt"
 #define BIKE_FILE "Data/Bike.txt"
@@ -56,6 +55,8 @@ class System {
       void checkOwnBike();
       void reviewRentedBike();   // review when return date match with today date
       void memRevMenu();
+
+      // friend class Member;
       // void viewHistory();
       
 };

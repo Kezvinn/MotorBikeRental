@@ -15,7 +15,7 @@
 
 std::string static ID_TYPE[2] = {"CitizenID", "Passport"};
 
-#define TODAY_DATE "17/10/2023"
+#define TODAY_DATE "25/12/2023"  //today
 
 class Member : public User {
    private:
@@ -35,7 +35,7 @@ class Member : public User {
       std::vector <MemReview*> memRevVect;   // all review of the member
       Request *currentRequest = nullptr;
    public:
-      // Member();
+      Member();
       Member(std::string i_memberID, std::string i_memUsername, std::string i_memPassword,
              std::string i_fullname, std::string i_phoneNumber,
              std::string i_idType, std::string i_idNumber, std::string i_drvNumber,
@@ -54,9 +54,9 @@ class Member : public User {
       int rentDuration(); //check for accepted request and return duration
       
       void reviewMember(std::string renterID); //leave comment and rating for member
-      bool requestCheck();   //check status and save rentbikeid if request accepted
+      void requestCheck();   //check status and save rentbikeid if request accepted
 
-      float memRatingCal();   // calculate average mem rating
+      void memRatingCal(); // calculate average mem rating
 
       std::vector<std::string> getRenter(std::vector<std::string> &storage); // retrieve approved requestest renter ID for review
       // std::string get_renterID();

@@ -23,7 +23,7 @@ class MotorBike{
       std::string location;   //limited to 3 locations
       int rentPrice;
       float memRating; 
-      int rentDuration; //how many date the bike being rented
+      // int rentDuration; //how many date the bike being rented
       //availalbe = when owner list bike for rent
       //unavailable = when owner unlist bike for rent/ bike on rent 
       std::string status; // bike being listed or not (available/unavailable)
@@ -31,7 +31,7 @@ class MotorBike{
       MotorBike(std::string i_bikeID, std::string i_model, std::string i_color,
                 int i_engineSize, std::string i_mode, std::string i_yearMade,
                 float i_bikeRating, int i_rentPrice, std::string i_location,
-                float i_memRating, std::string i_status, int i_rentDuration,
+                float i_memRating, std::string i_status,
                 std::string i_description);
       
       void showBikeInfo(); //show bike information

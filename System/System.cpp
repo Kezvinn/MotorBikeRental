@@ -67,7 +67,7 @@ void System::memberLoginMenu(){
    std::cout << "2. Back to main menu" << std::endl;
    loadMembers();
    loadBikes();
-   // loadAdmin();
+   loadAdmin();
    int choice;
    choice = menuChoice(1,2);
    switch (choice) {
@@ -79,7 +79,10 @@ void System::memberLoginMenu(){
       std::cout << "Enter Password: ";
       std::cin >> password;
       if (memberLogin(username, password)) { //if true -> login successfully
-         std::cout << "Login successfully" << std::endl;
+         std::cout << "=====================================================" << std::endl;      
+         std::cout << "|             -MEMBER LOGIN SUCCESSFULLY-           |" << std::endl;
+         std::cout << "=====================================================" << std::endl;
+   
          memberMenu();
          break;
       } else {
@@ -97,9 +100,9 @@ void System::adminLoginMenu(){
    std::cout << "=====================================================" << std::endl;
    std::cout << "1. Admin Login" << std::endl;
    std::cout << "2. Back to main menu" << std::endl;
-   // loadMembers();
-   // loadBikes();
-   // loadAdmin();
+   loadMembers();
+   loadBikes();
+   loadAdmin();
    int choice;
    choice = menuChoice(1,2);
    switch (choice) {
@@ -113,7 +116,9 @@ void System::adminLoginMenu(){
       std::cin >> password;
       // std::getline(std::cin, password);
       if (adminLogin(username,password)) {
-         std::cout << "Login successfully!" <<std::endl;
+         std::cout << "=====================================================" << std::endl;      
+         std::cout << "|              -ADMIN LOGIN SUCCESSFULLY-           |" << std::endl;
+         std::cout << "=====================================================" << std::endl;
          adminMenu();
          break;
       } 
@@ -139,18 +144,20 @@ bool System::memberLogin(std::string username, std::string password){
          currentMember = mem;
          currentMember->loadRequest();
          currentMember->loadMemRev();
-         int value = currentMember->rentDuration();   // get duration
-         for (int i = 0; i < bikeVect.size(); i ++){
-            if (bikeVect[i]->bikeID == currentMember->rentBikeID) {
-               bikeVect[i]->rentDuration = value;  //save duration   
-               if (value == 0) { //write status into bike
-                  bikeVect[i]->status = BIKE_STATUS[0];  // available
-               } else {
-                  bikeVect[i]->status = BIKE_STATUS[1];  // unavailable
-               }
-               
+         
+         //update data into member vector
+         currentMember->requestCheck();
+         
+         //update data into bike vector
+         for (auto bike : bikeVect){
+            if (bike->bikeID == currentMember->rentBikeID) {  //bike on rent
+               bike->status = BIKE_STATUS[1];  //status = unavailable
+            }
+            else {
+               bike->status = BIKE_STATUS[0]; //status = available
             }
          }
+         currentMember->memRatingCal();   //calculate new rating
          return true;
       }
    }
@@ -205,11 +212,9 @@ void System::memberMenu(){
       checkOwnBike();   //check if already have bike then action;
       break;
    case 3:  //list/unlist bike
-
       listBike();
       break;
    case 4:  //view request
-
       currentMember->viewRequest(); 
       memberMenu();
       break;
@@ -225,6 +230,7 @@ void System::memberMenu(){
    case 8:
       saveMemberToFile();
       saveBikesToFile();
+      saveAdminToFile();
       currentMember->saveRequestToFile();
       currentMember->saveMemRevToFile();
       std::cout << "=====================================================" << std::endl;
@@ -271,8 +277,8 @@ void System::loadBikes(){
       MotorBike *bike = new MotorBike(dataList[0], dataList[1], dataList[2],
                                       std::stoi(dataList[3]), dataList[4], dataList[5],
                                       std::stof(dataList[6]), std::stoi(dataList[7]), dataList[8],
-                                      std::stof(dataList[9]), dataList[10], std::stoi(dataList[11]),
-                                      dataList[12]);
+                                      std::stof(dataList[9]), dataList[10],
+                                      dataList[11]);
       bikeVect.push_back(bike);
    }
    file.close();  
@@ -316,7 +322,7 @@ void System::saveBikesToFile(){
            << bike->mode << "|" << bike->yearMade << "|"
            << bike->bikeRating << "|" << bike->rentPrice << "|"
            << bike->location << "|" << bike->memRating << "|"
-           << bike->status << "|" << bike->rentDuration << "|"
+           << bike->status << "|" 
            << bike->description << std::endl;
    }
    file.close();
@@ -352,10 +358,11 @@ void System::saveAdminToFile(){
    std::ofstream file {ADMIN_FILE};
    if (!file){
       std::cerr << "Could't open 'Admin.txt' file." << std::endl;
+      return;
    }
-   file << this->admin->get_username() << "|" << this->admin->get_password();
+   file << admin->get_username() << "|" << admin->get_password();
    file.close();
-   std::cout << "Admin file saved successfully!" <<std::endl;
+   // std::cout << "Admin file saved successfully!" << std::endl;
 }
 //guest function
 void System::guestViewBikes(){
@@ -699,8 +706,7 @@ void System::addBike(){
    std::string bikeid, model, color,
        enginesize, mode, yearmade,
        bikerating, rentprice, location,
-       memrating, status, rentduration,
-       description;
+       memrating, status, description;
    bikeid = bikeIDGenerate();
 
    do {
@@ -779,7 +785,7 @@ void System::addBike(){
    } while (!isFloat(memrating));
 
    status = BIKE_STATUS[1]; // status unavailable by default
-   rentduration = "0";
+   
    do {
       std::cout << "Format: no certain symbol" << std::endl;
       std::cout << "Enter bike description: ";
@@ -790,8 +796,7 @@ void System::addBike(){
    MotorBike *bike = new MotorBike(bikeid, model, color,
                                    std::stoi(enginesize), mode, yearmade,
                                    std::stof(bikerating), std::stoi(rentprice), location,
-                                   std::stof(memrating), status, std::stoi(rentduration),
-                                   description);
+                                   std::stof(memrating), status, description);
    bikeVect.push_back(bike);
    currentMember->ownBikeID = bikeid;  //save bike id to member
    currentBike = bike;
@@ -814,7 +819,6 @@ void System::listBike(){
    switch (choice) {
       case 1:
          currentBike->status = BIKE_STATUS[0]; // Available
-         currentBike->rentDuration = 0;
          break;
       case 2:
          currentBike->status = BIKE_STATUS[1];  //Unavailable
@@ -847,7 +851,7 @@ void System::memRevMenu(){
    std::cout << "1. View all Renters." << std::endl;
    std::cout << "2. Return to Member Menu." << std::endl;   
    int choice = menuChoice(1,2);
-   std::cout << "=====================================================" << std::endl;
+   // std::cout << "=====================================================" << std::endl;
    switch (choice) {
    case 1:
       std::cout << std::setw(7) << "-Index-" << std::setw(17) << "-Full Name-"
@@ -855,8 +859,8 @@ void System::memRevMenu(){
       for (int i = 0; i < renter.size(); i++) {
          for(auto mem : memberVect){
             if (renter[i] == mem->memberID){
-               std::cout << std::setw(4) << index << std::setw(19) << mem->fullName
-                           << std::setw(16) << mem->memRating << std::endl;
+               std::cout << std::setw(4) << order << std::setw(20) << mem->fullName
+                           << std::setw(11) << mem->memRating << std::endl;
                order++;
                track.push_back(index);
             }
@@ -874,19 +878,21 @@ void System::memRevMenu(){
    std::cout << "2. Return to Review Menu." << std::endl;
    int choice2 = menuChoice(1,2);
    int choice3;
+   // float currentRating = 0;
    std::cout << "=====================================================" << std::endl;
    switch (choice2) {
-   case 1:
-      choice3 = menuChoice(0, order, track);
-      currentMember->reviewMember(renter[choice3]);   
-      break;
-   
-   case 2:
-      memRevMenu();  
-      break;
+      case 1:
+         choice3 = menuChoice(0, order, track);
+         currentMember->reviewMember(renter[choice3]);
+         memberMenu();  //return to member menu   
+         break;
+      
+      case 2:
+         memRevMenu();  
+         break;
    }
 
-   std::cout << "=====================================================" << std::endl;
-   std::cout << "|            -THANK YOU FOR YOUR REVIEW-            |" << std::endl;
-   std::cout << "=====================================================" << std::endl;
+   // std::cout << "=====================================================" << std::endl;
+   // std::cout << "|            -THANK YOU FOR YOUR REVIEW-            |" << std::endl;
+   // std::cout << "=====================================================" << std::endl;
 }
