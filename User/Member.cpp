@@ -254,7 +254,6 @@ void Member::viewRequest(){   //view and take action upon requests
       break;
    }
 }
-
 void Member::requestCheck () {   //check status and update rentbikeID to current member
    for (auto rqst : rqstVect) {
       if (rqst->renterID == this->memberID){ //if current memmber is the one who sent the request
@@ -381,6 +380,11 @@ void Member::reviewBike(std::string rentedBikeID){
    bikeRevVect.push_back(rev);
    rev->showBikeRev();  //display review
  
+   for (auto rqst : rqstVect) {  
+      if (rqst->rentbikeID == rentedBikeID) {
+         rqst->memRevStatus = REV_STATUS[1]; //reviewed
+      }
+   }
    std::cout << "=====================================================" << std::endl;
    std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
    std::cout << "=====================================================" << std::endl;

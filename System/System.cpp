@@ -871,8 +871,9 @@ void System::memRevMenu(){
                order++;
                track.push_back(index);
             }
-            index++;
+            // index++;
          }      
+         index++;
       }
       break;
    case 2:
@@ -925,8 +926,9 @@ void System::bikeRevMenu(){
                order++;
                track.push_back(index);
             }
-            index++;
+            // index++;
          }      
+         index++;
       }
       break;
    case 2:
@@ -942,7 +944,7 @@ void System::bikeRevMenu(){
    switch (choice2) {
       case 1:
          choice3 = menuChoice(0, order, track);
-         std::cout << "renter bike " << choice3 << "\t" <<rentedBike[choice3]<<std::endl;
+         std::cout << "renter bike " << choice3 << "\t" << rentedBike[choice3]<<std::endl;
          currentMember->reviewBike(rentedBike[choice3]);
          std::cout << "got here" << std::endl;
          memberMenu();  //return to member menu   
