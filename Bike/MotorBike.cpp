@@ -28,6 +28,7 @@ void MotorBike::showBikeInfo(){  //use to display after user added a new bike
    std::cout << "- Description: " << description << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
+/*
 void MotorBike::reviewBike(){
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                 -MOTORBIKE REVIEW-                |" << std::endl;
@@ -48,16 +49,18 @@ void MotorBike::reviewBike(){
 
    BikeReview *review = new BikeReview (reviewID, bikeID, std::stof(rating), comment);
    bikeRevVect.push_back(review);
-   this->bikeRating = bikeratingCal();
+   // this->bikeRating = bikeratingCal();
    std::cout << "=====================================================" << std::endl;
    std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
-
-float MotorBike::bikeratingCal(){
-   float total;
+*/
+void MotorBike::bikeratingCal(){
+   float total = this->bikeRating;  //current rating of bike
+   int count = 0;
    for (int i = 0; i < bikeRevVect.size(); i++) {
-      bikeRevVect[i]->get_score();
+      total += bikeRevVect[i]->get_score();
+      count++;
    }
-   return total/bikeRevVect.size();
+   this->bikeRating = total/(count+1);
 }

@@ -11,12 +11,14 @@ class Request {
       std::string startDate;
       std::string endDate;
       std::string rqst_status;   
-      std::string revStatus;  //for review
+      std::string memRevStatus;  //for mem review
+      std::string bikeRevStatus; //for bike review
       int totalCost;
    public:
       Request(std::string i_requestID, std::string i_renterID, std::string i_rentBikeID,
               std::string i_startDate, std::string i_endDate,
-              int i_totalCost, std::string i_rqst_status, std::string i_revStatus);
+              int i_totalCost, std::string i_rqst_status, 
+              std::string i_memRevStatus, std::string i_bikeRevStatus);
       friend class Member;
 };
 std::string rqstIDGenerate();

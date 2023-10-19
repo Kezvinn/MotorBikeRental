@@ -35,8 +35,8 @@ class MotorBike{
                 std::string i_description);
       
       void showBikeInfo(); //show bike information
-      void reviewBike();   // rate and comment bike
-      float bikeratingCal();  //calculate bike rating
+      // void reviewBike();   // rate and comment bike
+      void bikeratingCal();  //calculate bike rating
       
       friend class System;
 };

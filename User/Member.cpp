@@ -40,7 +40,8 @@ void Member::loadRequest(){
       dataList = splitString(line,'|');
       Request *rqst = new Request(dataList[0], dataList[1], dataList[2],
                                   dataList[3], dataList[4], 
-                                  std::stoi(dataList[5]), dataList[6], dataList[7]);
+                                  std::stoi(dataList[5]), dataList[6],
+                                  dataList[7],dataList[8]);
       rqstVect.push_back(rqst);
    }
    std::cout << "'Request.txt' loaded." << std::endl;
@@ -64,6 +65,24 @@ void Member::loadMemRev(){
    std::cout << "'MemRev.txt' loaded." << std::endl;
 
 }
+void Member::loadBikeRev(){
+   bikeRevVect.clear();
+   std::ifstream file {BIKE_REV_FILE};
+   if (!file) {
+      std::cerr<< "Couldn't open 'BikeRev.txt' file." << std::endl;
+      return;
+   }
+   std::string line;
+   std::vector <std::string> dataList;
+   while(std::getline(file, line)){
+      dataList = splitString(line, '|');
+      BikeReview *rev = new BikeReview(dataList[0], dataList[1],
+                                       std::stof(dataList[2]),
+                                       dataList[3]);
+      bikeRevVect.push_back(rev);
+   }
+   std::cout << "'BikeRev.txt' loaded." << std::endl;
+}
 //output
 void Member::saveRequestToFile(){
    std::ofstream file {REQUEST_FILE};
@@ -78,7 +97,8 @@ void Member::saveRequestToFile(){
            << rqst->endDate << "|"
            << rqst->totalCost << "|"
            << rqst->rqst_status << "|"
-           << rqst->revStatus
+           << rqst->memRevStatus << "|"
+           << rqst->bikeRevStatus
            << std::endl;
    }
    file.close();
@@ -87,7 +107,7 @@ void Member::saveRequestToFile(){
 void Member::saveMemRevToFile(){
    std::ofstream file {MEM_REV_FILE};
    if (!file){
-      std::cerr << "Couldn't open 'MemRev' file " << std::endl;
+      std::cerr << "Couldn't open 'MemRev.txt' file " << std::endl;
    }
    for (auto rev : memRevVect) {
       file << rev->memReviewID << "|"
@@ -99,18 +119,35 @@ void Member::saveMemRevToFile(){
    file.close();
    // std::cout << "'MemRev.txt' saved successfully" << std::endl;
 }
+void Member::saveBikeRevToFile(){
+   std::ofstream file {BIKE_REV_FILE};
+   if (!file){
+      std::cerr << "Couldn't open 'BikeRev.txt' file " << std::endl;
+   }
+   for (auto rev : bikeRevVect) {
+      file << rev->bikeReviewID << "|"
+           << rev->bikeID << "|"
+           << rev->get_score() << "|"
+           << rev->get_comment() 
+           << std::endl;
+   }
+   file.close();
+   // std::cout << "'BikeRev.txt' saved successfully" << std::endl;
+
+}
 //request actions
 void Member::sendRequest(std::string bikeID, int cost){  //create request and send to bike owner
    std::cout << "=====================================================" << std::endl;
    std::cout << "|                REQUEST PREPARATION                |" << std::endl;
    std::cout << "=====================================================" << std::endl;
    std::cin.ignore();
-   std::string requestid, renterid, rentbikeid, startdate, enddate, rqststatus,reviewstatus;
-   
+   std::string requestid, renterid, rentbikeid, startdate, enddate, rqststatus, memreviewstatus, bikereviewstatus;
+
    requestid = rqstIDGenerate();
    renterid = this->memberID;
    rqststatus = RQST_STATUS[0];  //pending by default
-   reviewstatus = REV_STATUS[0]; //not review by default
+   memreviewstatus = REV_STATUS[0]; //not review by default
+   bikereviewstatus = REV_STATUS[0]; // not reviewed by default
    rentbikeid = bikeID; 
 
    do{
@@ -151,7 +188,8 @@ void Member::sendRequest(std::string bikeID, int cost){  //create request and se
    // this->rentBikeID = bikeID; //record the rent bike id;
    Request *rqst = new Request(requestid, renterid, rentbikeid,
                                startdate, enddate, 
-                               total, rqststatus, reviewstatus);
+                               total, rqststatus, 
+                               memreviewstatus, bikereviewstatus);
    rqstVect.push_back(rqst);
    saveRequestToFile(); // save to txt file
 
@@ -265,8 +303,9 @@ void Member::topUp(){ //add credits into account
       std::cout << "Correct password. Credits added successfully." << std::endl;
    }
 }
-//return rent duration to be save in bike info
-int Member::rentDuration(){   //check status and return the duration 
+
+//reconsider rentduration
+/*int Member::rentDuration(){   //check status and return the duration 
    for (auto rqst : rqstVect) {
       if (rqst->renterID == this->memberID && rqst->rqst_status == RQST_STATUS[1]) {   //accepted
          this->rentBikeID = rqst->rentbikeID;   // set rentbikeID
@@ -275,6 +314,7 @@ int Member::rentDuration(){   //check status and return the duration
    }
    return 0;
 }
+*/
 //comment and rate renter
 void Member::reviewMember(std::string renterID){
    std::cout << "=====================================================" << std::endl;
@@ -282,7 +322,7 @@ void Member::reviewMember(std::string renterID){
    std::cout << "=====================================================" << std::endl;
    std::cin.ignore();
 
-   std::vector<int> track;
+   // std::vector<int> track;
    std::string reviewID, comment, rating;   //completed
    do {
       std::cout << "=====================================================" << std::endl;
@@ -300,15 +340,13 @@ void Member::reviewMember(std::string renterID){
    MemReview *review = new MemReview(reviewID, renterID,
                                      std::stof(rating), comment);
    memRevVect.push_back(review);
-   // this->memRating = memRatingCal();
-   // mem->memRatingCal(renterID, mem); // calculate new rating for member
+
    review->showMemRev();
 
    //change status of review
    for (auto rqst : rqstVect) {  
       if (rqst->renterID == renterID) {
-         rqst->revStatus = REV_STATUS[1]; //reviewed
-         // std::cout << "rqst.revStatus = " << rqst->revStatus << std::endl;
+         rqst->memRevStatus = REV_STATUS[1]; //reviewed
       }
    }
    // saveRequestToFile();
@@ -316,26 +354,81 @@ void Member::reviewMember(std::string renterID){
    std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
+void Member::reviewBike(std::string rentedBikeID){
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|                 -MOTORBIKE REVIEW-                |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+   std::cin.ignore();
+
+   std::vector<int> track;
+   std::string reviewID, comment, rating;   //completed
+   do {
+      std::cout << "=====================================================" << std::endl;
+      std::cout << "Format: comment no special character." << std::endl;
+      std::cout << "Enter your comment: ";
+      std::getline(std::cin, comment);
+   } while (!isComment(comment)); // char, num, special character allowed
+   do {
+      std::cout << "=====================================================" << std::endl;
+      std::cout << "Format: Only number (1-10)." << std::endl;
+      std::cout << "Enter your rating: ";
+      std::getline(std::cin, rating);
+   } while (!isFloat(rating, 1.0, 10.0)); // 1-10 float
+
+   reviewID = BikeRevIDGen();              // gen new review ID
+   BikeReview *rev = new BikeReview(reviewID, rentedBikeID,
+                                    std::stof(rating), comment);
+   bikeRevVect.push_back(rev);
+   rev->showBikeRev();  //display review
+ 
+   std::cout << "=====================================================" << std::endl;
+   std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
+   std::cout << "=====================================================" << std::endl;
+}
 //calculate average rating base on the customer review
 void Member::memRatingCal(){
    float total = this->memRating;
+   int count = 0;
    for (auto rev : memRevVect){
       if (rev->memID == this->memberID){
          total += rev->get_score();
+         count++;
       }
    }
-   this->memRating = total/(memRevVect.size()+1);
+   this->memRating = total/(count+1);
 }
+// void Member::bikeRatingCal(){
+   // float total = this->memRating;
+   // for (auto rev : memRevVect){
+   //    if (rev->memID == this->memberID){
+   //       total += rev->get_score();
+   //    }
+   // }
+   // this->memRating = total/(memRevVect.size()+1);
+// }
 
 std::vector<std::string> Member::getRenter(std::vector<std::string> &storage){
    for (auto rqst : rqstVect) {
       if(rqst->rentbikeID == this->ownBikeID){  // if bike belong to current member
             if ((rqst->rqst_status == RQST_STATUS[1]) && (duration(TODAY_DATE, rqst->endDate) <= 0)) {                                        // check status == accepted, enddate == today
-               if (rqst->revStatus == REV_STATUS[0]){   //review status == not review
+               if (rqst->memRevStatus == REV_STATUS[0]){   //review status == not review
                   storage.push_back(rqst->renterID);
                }
             }
       } 
+   }
+   return storage;
+}
+std::vector<std::string> Member::getRentedBike(std::vector<std::string> &storage) {
+   for (auto rqst : rqstVect) {
+      if (rqst->renterID == this->memberID) { // if we the renter
+            if ((rqst->rqst_status == RQST_STATUS[1]) && (duration(TODAY_DATE, rqst->endDate) <= 0)) { // check status == accepted, enddate == today
+               if (rqst->bikeRevStatus == REV_STATUS[0]) { // review status == not review
+                  storage.push_back(rqst->rentbikeID);   //get rent bike
+                  std::cout << "rqst.rentbikeID: " << rqst->rentbikeID << std::endl;
+               }
+            }
+      }
    }
    return storage;
 }

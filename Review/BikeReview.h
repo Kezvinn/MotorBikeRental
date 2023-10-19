@@ -8,6 +8,8 @@ class BikeReview : public Review {
       std::string bikeID;
    public:
       BikeReview(std::string i_bikeReviewID, std::string i_bikeID, float i_score, std::string i_comment);
+      friend class Member;
+      void showBikeRev();
 };
 std::string BikeRevIDGen();
 #endif

@@ -22,7 +22,7 @@ int menuChoice(int start, int end) {
    } while (!flag);
    return finalChoice;
 };
-int menuChoice(int start, int end,std::vector<int> track) { 
+int menuChoice(int start, int end, std::vector<int> track) {
    int finalChoice;
    bool flag;
    std::string tempo;
@@ -36,16 +36,15 @@ int menuChoice(int start, int end,std::vector<int> track) {
          continue;
       }
       finalChoice = std::stoi(tempo);
-      for (int i = 0; i < track.size(); i++) {
+      // for (int i = 0; i < track.size(); i++) {
          if (finalChoice > end || finalChoice < start) {
             std::cout << "Enter choice in the range " << start << " - " << end << " only!" << std::endl;
             flag = false;
          }
-         else
-         {
+         else {
             flag = true;
          }
-      }
+      // }
    } while (!flag);
    return track[finalChoice];
 };
