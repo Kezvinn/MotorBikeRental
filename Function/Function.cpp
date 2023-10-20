@@ -318,7 +318,6 @@ bool isFloat(std::string s, float lower, float upper) {
    }
    return true;
 }
-
 bool isComment (std::string s){
    std::regex reg("^[a-zA-Z&=_'-+,<>.0-9 ]+$"); 
    s = stringCut(s);
@@ -327,10 +326,29 @@ bool isComment (std::string s){
    } 
    return true;
 }
-// bool dateCheck(std::string s){   //check date for 
-//    if (duration (TODAY_DATE, s) < 0) {
-//       std::cerr << "Date in the past." << std::endl;
-//       return false;
-//    }  
-//    return true;
-// }
+//-------------------ID Generator --------------------------------
+std::string memIDGenerate(){
+   srand(time(NULL));
+   int num = rand() % 1001; //random number form 0-1000
+   return ("M-" + std::to_string(num));
+}
+std::string bikeIDGenerate(){
+   srand(time(NULL));
+   int num = rand() % 1001; //random number form 0-100
+   return ("Bk-" + std::to_string(num));
+}
+std::string rqstIDGenerate(){
+   srand(time(NULL));
+   int num = rand() % 1001; //random number form 0-1000
+   return ("Rqst-" + std::to_string(num));
+}
+std::string MemRevIDGen(){
+   srand(time(NULL));
+   int num = rand() % 1001; //random number form 0-100
+   return ("RvM-" + std::to_string(num));
+}
+std::string BikeRevIDGen() {
+   srand(time(NULL));
+   int num = rand() % 1001; // random number form 0-100
+   return ("RvB-" + std::to_string(num));
+}

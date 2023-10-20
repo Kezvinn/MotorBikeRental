@@ -1,9 +1,4 @@
 #include "Request.h"
-std::string rqstIDGenerate(){
-   srand(time(NULL));
-   int num = rand() % 1001; //random number form 0-1000
-   return ("Rqst-" + std::to_string(num));
-}
 
 Request::Request(std::string i_requestID, std::string i_renterID, std::string i_rentBikeID,
                  std::string i_startDate, std::string i_endDate,

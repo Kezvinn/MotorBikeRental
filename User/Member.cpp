@@ -1,10 +1,5 @@
 #include "Member.h"
 
-std::string memIDGenerate(){
-   srand(time(NULL));
-   int num = rand() % 1001; //random number form 0-1000
-   return ("M-" + std::to_string(num));
-}
 Member::Member(){};
 Member::Member(std::string i_memberID, std::string i_memUsername, std::string i_memPassword,
                std::string i_fullname, std::string i_phoneNumber,
@@ -16,6 +11,7 @@ Member::Member(std::string i_memberID, std::string i_memUsername, std::string i_
       idType(i_idType), idNumber(i_idNumber), drvNumber(i_drvNumber),
       expDate(i_expDate), memRating(i_memRating), credits(i_credits),
       ownBikeID(i_ownBikeID), rentBikeID(i_rentBikeID) {};
+
 //showInfo
 void Member::showMemberInfo(){
    std::cout << "=====================================================" << std::endl;
@@ -26,6 +22,7 @@ void Member::showMemberInfo(){
    std::cout << "- Own Bike ID: "<< ownBikeID << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
+
 //input
 void Member::loadRequest(){
    rqstVect.clear();
@@ -83,6 +80,7 @@ void Member::loadBikeRev(){
    }
    std::cout << "'BikeRev.txt' loaded." << std::endl;
 }
+
 //output
 void Member::saveRequestToFile(){
    std::ofstream file {REQUEST_FILE};
@@ -135,6 +133,7 @@ void Member::saveBikeRevToFile(){
    // std::cout << "'BikeRev.txt' saved successfully" << std::endl;
 
 }
+
 //request actions
 void Member::sendRequest(std::string bikeID, int cost){  //create request and send to bike owner
    std::cout << "=====================================================" << std::endl;
@@ -254,7 +253,7 @@ void Member::viewRequest(){   //view and take action upon requests
       break;
    }
 }
-void Member::requestCheck () {   //check status and update rentbikeID to current member
+void Member::requestCheck() {   //check status and update rentbikeID to current member
    for (auto rqst : rqstVect) {
       if (rqst->renterID == this->memberID){ //if current memmber is the one who sent the request
          if (rqst->rqst_status == RQST_STATUS[0]){ //pending
@@ -281,6 +280,7 @@ void Member::requestCheck () {   //check status and update rentbikeID to current
       //if declined -> add back the money
       //if pendinng -> do nothing -> 'null'
 }
+
 //add credits into account
 void Member::topUp(){ //add credits into account
    std::cout << "=====================================================" << std::endl;
@@ -303,17 +303,6 @@ void Member::topUp(){ //add credits into account
    }
 }
 
-//reconsider rentduration
-/*int Member::rentDuration(){   //check status and return the duration 
-   for (auto rqst : rqstVect) {
-      if (rqst->renterID == this->memberID && rqst->rqst_status == RQST_STATUS[1]) {   //accepted
-         this->rentBikeID = rqst->rentbikeID;   // set rentbikeID
-         return duration (rqst->startDate, rqst->endDate);  // return duration
-      }
-   }
-   return 0;
-}
-*/
 //comment and rate renter
 void Member::reviewMember(std::string renterID){
    std::cout << "=====================================================" << std::endl;
@@ -389,6 +378,7 @@ void Member::reviewBike(std::string rentedBikeID){
    std::cout << "|             -THANK YOU FOR YOUR REVIEW-           |" << std::endl;
    std::cout << "=====================================================" << std::endl;
 }
+
 //calculate average rating base on the customer review
 void Member::memRatingCal(){
    float total = this->memRating;
@@ -401,16 +391,8 @@ void Member::memRatingCal(){
    }
    this->memRating = total/(count+1);
 }
-// void Member::bikeRatingCal(){
-   // float total = this->memRating;
-   // for (auto rev : memRevVect){
-   //    if (rev->memID == this->memberID){
-   //       total += rev->get_score();
-   //    }
-   // }
-   // this->memRating = total/(memRevVect.size()+1);
-// }
 
+//retrieve rental information
 std::vector<std::string> Member::getRenter(std::vector<std::string> &storage){
    for (auto rqst : rqstVect) {
       if(rqst->rentbikeID == this->ownBikeID){  // if bike belong to current member

@@ -2,11 +2,12 @@
 #define MOTORBIKE_H
 
 #include <bits/stdc++.h>
+//----------------------------------------------------------------
 #include "../Review/BikeReview.h"
 #include "../Function/Function.h"
-
+//----------------------------------------------------------------
 #define BIKE_REV_FILE "Data/BikeRev.txt"
-
+//----------------------------------------------------------------
 std::string static LOCATION[3] = {"HN", "DN", "SG"};
 std::string static BIKE_STATUS[2] = {"Available", "Unavailable"};
 std::string static MODE[3] = {"Auto", "Manual", "Semi"};
@@ -25,7 +26,6 @@ class MotorBike{
       std::string location;   //limited to 3 locations
       int rentPrice;
       float memRating; 
-      // int rentDuration; //how many date the bike being rented
       //availalbe = when owner list bike for rent
       //unavailable = when owner unlist bike for rent/ bike on rent 
       std::string status; // bike being listed or not (available/unavailable)
@@ -37,12 +37,9 @@ class MotorBike{
                 std::string i_description);
       
       void showBikeInfo(); //show bike information
-      // void reviewBike();   // rate and comment bike
       void bikeratingCal();  //calculate bike rating
-      void loadRating();
-      void saveRating();
+      void loadRating();   //get data into vector
+      
       friend class System;
 };
-
-std::string bikeIDGenerate();
 #endif // MOTORBIKE_H

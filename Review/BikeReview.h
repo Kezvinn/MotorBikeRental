@@ -1,7 +1,9 @@
 #ifndef BIKEREVIEW_H
 #define BIKEREVIEW_H
+
 #include <bits/stdc++.h>
 #include "Review.h"
+
 class BikeReview : public Review {
    private:
       std::string bikeReviewID;
@@ -12,5 +14,4 @@ class BikeReview : public Review {
       void showBikeRev();
       friend class MotorBike;
 };
-std::string BikeRevIDGen();
 #endif
