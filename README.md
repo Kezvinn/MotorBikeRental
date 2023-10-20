@@ -1,8 +1,11 @@
 # MotorBikeRental
-Application for motorbiker rental.
-Admin login:   username: admin
-               password: 123abc
-Accounts to use as a member:
+
+Application for motorbike rental.
+
+Admin login:   
+    Username: admin
+    Password: 123abc
+Member login:
 1. Account 1:
      Username: nhatn
      Password: nhat123
