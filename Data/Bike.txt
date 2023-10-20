@@ -1,5 +1,5 @@
 Bk-113|Vision|Blue|125|Auto|2019|4.6|6|DN|6.8|Available|Good
-Bk-341|Future|Green|150|Manual|2020|8.9|7|HN|6.8|Available|Perfect
+Bk-341|Future|Green|150|Manual|2020|8.4|7|HN|6.8|Available|Perfect
 Bk-908|Lead|Red|150|Auto|2019|7.5|6|SG|5.7|Available|Execelent
 Bk-342|FutureNeo|Black|200|Manual|2022|8.7|7|DN|6.8|Available|Perfect
 Bk-311|Future|Grey|125|Manual|2020|8.3|7|HN|6.1|Available|Real bad

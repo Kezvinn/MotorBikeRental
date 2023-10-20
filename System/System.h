@@ -59,7 +59,6 @@ class System {
       void memRevMenu();   //6.
       void bikeRevMenu();  //7.
 
-      
       // void reviewRentedBike();   // review when return date match with today date
       
       // friend class Member;

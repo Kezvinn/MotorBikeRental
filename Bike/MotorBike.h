@@ -5,6 +5,8 @@
 #include "../Review/BikeReview.h"
 #include "../Function/Function.h"
 
+#define BIKE_REV_FILE "Data/BikeRev.txt"
+
 std::string static LOCATION[3] = {"HN", "DN", "SG"};
 std::string static BIKE_STATUS[2] = {"Available", "Unavailable"};
 std::string static MODE[3] = {"Auto", "Manual", "Semi"};
@@ -37,7 +39,8 @@ class MotorBike{
       void showBikeInfo(); //show bike information
       // void reviewBike();   // rate and comment bike
       void bikeratingCal();  //calculate bike rating
-      
+      void loadRating();
+      void saveRating();
       friend class System;
 };
 

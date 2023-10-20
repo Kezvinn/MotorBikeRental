@@ -56,11 +56,33 @@ void MotorBike::reviewBike(){
 }
 */
 void MotorBike::bikeratingCal(){
+   loadRating();  //load input
    float total = this->bikeRating;  //current rating of bike
    int count = 0;
-   for (int i = 0; i < bikeRevVect.size(); i++) {
-      total += bikeRevVect[i]->get_score();
-      count++;
+   for (auto rev : bikeRevVect) {
+      if(rev->bikeID == this->bikeID){
+         total += rev->get_score();
+         count++;
+      }
    }
    this->bikeRating = total/(count+1);
+}
+
+void MotorBike::loadRating (){
+   bikeRevVect.clear();
+   std::ifstream file {BIKE_REV_FILE};
+   if (!file) {
+      std::cerr<< "Couldn't open 'BikeRev.txt' file." << std::endl;
+      return;
+   }
+   std::string line;
+   std::vector <std::string> dataList;
+   while(std::getline(file, line)){
+      dataList = splitString(line, '|');
+      BikeReview *rev = new BikeReview(dataList[0], dataList[1],
+                                       std::stof(dataList[2]),
+                                       dataList[3]);
+      bikeRevVect.push_back(rev);
+   }
+   // std::cout << "'BikeRev.txt' in bike loaded." << std::endl;
 }

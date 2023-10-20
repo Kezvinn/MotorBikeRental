@@ -146,14 +146,18 @@ bool System::memberLogin(std::string username, std::string password){
          currentMember->loadMemRev();
          currentMember->loadBikeRev();
          for (auto bike : bikeVect) {
-            if (bike->bikeID == currentMember->rentBikeID) {
-               bike->bikeratingCal();
+            if (bike->bikeID == currentMember->ownBikeID) {
+               currentBike = bike;
+               std::cout << "Before Current rating: " << currentBike->bikeRating << std::endl;
+               currentBike->bikeratingCal();
+               std::cout << "After Current rating: " << currentBike->bikeRating << std::endl;
+
             }
          }
-         //update data into member vector
-         currentMember->requestCheck();   //update rentbikeID
+         //update data into member
+         currentMember->requestCheck();   //update rentbikeID to member
          
-         //update data into bike vector
+         //update data into bike
          for (auto bike : bikeVect){
             if (bike->bikeID == currentMember->rentBikeID) {  //bike on rent
                bike->status = BIKE_STATUS[1];  //status = unavailable
@@ -944,9 +948,9 @@ void System::bikeRevMenu(){
    switch (choice2) {
       case 1:
          choice3 = menuChoice(0, order, track);
-         std::cout << "renter bike " << choice3 << "\t" << rentedBike[choice3]<<std::endl;
+         // std::cout << "renter bike " << choice3 << "\t" << rentedBike[choice3]<<std::endl;
          currentMember->reviewBike(rentedBike[choice3]);
-         std::cout << "got here" << std::endl;
+         // std::cout << "got here" << std::endl;
          memberMenu();  //return to member menu   
          break;
       case 2:

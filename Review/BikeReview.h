@@ -10,6 +10,7 @@ class BikeReview : public Review {
       BikeReview(std::string i_bikeReviewID, std::string i_bikeID, float i_score, std::string i_comment);
       friend class Member;
       void showBikeRev();
+      friend class MotorBike;
 };
 std::string BikeRevIDGen();
 #endif

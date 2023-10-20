@@ -16,8 +16,8 @@
 #define INITIAL_CREDITS 20
 
 std::string static ID_TYPE[2] = {"CitizenID", "Passport"};
-
-#define TODAY_DATE "25/12/2023"  //today
+//----------------------------------------------------------------
+#define TODAY_DATE "26/12/2023"  //today
 
 class Member : public User {
    private:
@@ -69,8 +69,8 @@ class Member : public User {
       
       //bike review function
       void reviewBike(std::string rentedBikeID);
-      std::vector<std::string> getRentedBike(std::vector<std::string> &storage); // retrieve approved requestest renter ID for review
       // void bikeRatingCal(); // calculate avg member rating
+      std::vector<std::string> getRentedBike(std::vector<std::string> &storage); // retrieve approved requestest renter ID for review
       
       //credits add
       void topUp();  // add credits into accout

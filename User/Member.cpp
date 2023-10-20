@@ -343,8 +343,8 @@ void Member::reviewMember(std::string renterID){
    review->showMemRev();
 
    //change status of review
-   for (auto rqst : rqstVect) {  
-      if (rqst->renterID == renterID) {
+   for (auto rqst : rqstVect) {
+      if ((rqst->renterID == renterID) && (rqst->rqst_status == RQST_STATUS[1])) {
          rqst->memRevStatus = REV_STATUS[1]; //reviewed
       }
    }
@@ -381,8 +381,8 @@ void Member::reviewBike(std::string rentedBikeID){
    rev->showBikeRev();  //display review
  
    for (auto rqst : rqstVect) {  
-      if (rqst->rentbikeID == rentedBikeID) {
-         rqst->memRevStatus = REV_STATUS[1]; //reviewed
+      if ((rqst->renterID == this->memberID) && (rqst->rqst_status == RQST_STATUS[1])) {   //renterID is matched with the one that sent request and already accepted
+         rqst->bikeRevStatus = REV_STATUS[1]; //reviewed
       }
    }
    std::cout << "=====================================================" << std::endl;
