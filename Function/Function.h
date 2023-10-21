@@ -39,9 +39,7 @@ bool isComment(std::string s);
 std::string memIDGenerate();
 std::string bikeIDGenerate();
 std::string rqstIDGenerate();
-
 std::string MemRevIDGen();
 std::string BikeRevIDGen();
-
 
 #endif

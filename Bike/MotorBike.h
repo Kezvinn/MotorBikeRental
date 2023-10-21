@@ -29,13 +29,15 @@ class MotorBike{
       //availalbe = when owner list bike for rent
       //unavailable = when owner unlist bike for rent/ bike on rent 
       std::string status; // bike being listed or not (available/unavailable)
+      std::string startTime;  //available from when 
+      std::string endTime; //unavailable from when
       MotorBike();
       MotorBike(std::string i_bikeID, std::string i_model, std::string i_color,
                 int i_engineSize, std::string i_mode, std::string i_yearMade,
                 float i_bikeRating, int i_rentPrice, std::string i_location,
-                float i_memRating, std::string i_status,
+                float i_memRating, std::string i_status, std::string i_starttime, std::string i_endtime,
                 std::string i_description);
-      
+
       void showBikeInfo(); //show bike information
       void bikeratingCal();  //calculate bike rating
       void loadRating();   //get data into vector

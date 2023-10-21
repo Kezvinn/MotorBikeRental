@@ -168,8 +168,8 @@ void System::loadBikes(){
       MotorBike *bike = new MotorBike(dataList[0], dataList[1], dataList[2],
                                       std::stoi(dataList[3]), dataList[4], dataList[5],
                                       std::stof(dataList[6]), std::stoi(dataList[7]), dataList[8],
-                                      std::stof(dataList[9]), dataList[10],
-                                      dataList[11]);
+                                      std::stof(dataList[9]), dataList[10], dataList[11],dataList[12],
+                                      dataList[13]);
       bikeVect.push_back(bike);
    }
    file.close();  
@@ -214,7 +214,8 @@ void System::saveBikesToFile(){
            << bike->mode << "|" << bike->yearMade << "|"
            << bike->bikeRating << "|" << bike->rentPrice << "|"
            << bike->location << "|" << bike->memRating << "|"
-           << bike->status << "|" 
+           << bike->status << "|" << bike->startTime <<"|"
+           <<bike->endTime << "|" 
            << bike->description << std::endl;
    }
    file.close();
@@ -503,16 +504,18 @@ void System::adminViewMembers(){
 bool System::memberLogin(std::string username, std::string password){
    for(Member *mem : memberVect){
       if (username == mem->get_username() && password == mem->get_password()){
+         bikeSttCheck();   
          currentMember = mem;
          currentMember->loadRequest(); 
          currentMember->loadMemRev();
          currentMember->loadBikeRev();
+         //handling bike if it being rent
          for (auto bike : bikeVect) {
             if (bike->bikeID == currentMember->ownBikeID) {
                currentBike = bike;
-               std::cout << "Before Current rating: " << currentBike->bikeRating << std::endl;
+               // std::cout << "Before Current rating: " << currentBike->bikeRating << std::endl;
                currentBike->bikeratingCal();
-               std::cout << "After Current rating: " << currentBike->bikeRating << std::endl;
+               // std::cout << "After Current rating: " << currentBike->bikeRating << std::endl;
 
             }
          }
@@ -523,6 +526,8 @@ bool System::memberLogin(std::string username, std::string password){
          for (auto bike : bikeVect){
             if (bike->bikeID == currentMember->rentBikeID) {  //bike on rent
                bike->status = BIKE_STATUS[1];  //status = unavailable
+               bike->startTime = "null";
+               bike->endTime = "null";
             }
             else {
                bike->status = BIKE_STATUS[0]; //status = available
@@ -595,6 +600,7 @@ void System::rentMenu(){
              << std::setw(16) << "-Year Made-" << std::setw(12) << "-Mode-"
              << std::setw(16) << "-Location-" << std::setw(15) << "-Credits-"
              << std::setw(19) << "-Bike Rating-" << std::setw(21) << "-Member Rating-"
+             << std::setw(10) << "-Start Time-" << std::setw(10) << "-End Time-"
              << std::setw(18) << "-Descripton-" << std::endl;
    switch (choice) {
       case 1:
@@ -603,11 +609,12 @@ void System::rentMenu(){
             if (bike->location == LOCATION[0] && bike->status == BIKE_STATUS[0] &&
                 bike->bikeID != currentMember->ownBikeID && bike->memRating <= currentMember->memRating) { // HN/Available/not own bike/ qualify with rating
                std::cout << std::setw(4) << order << std::setw(16) << bike->bikeID
-                         << std::setw(14) << bike->model << std::setw(13) << bike->color
-                         << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
-                         << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
-                         << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
-                         << std::setw(21) << bike->description << std::endl;
+                        << std::setw(14) << bike->model << std::setw(13) << bike->color
+                        << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
+                        << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
+                        << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
+                        << std::setw(10) << bike->startTime << std::setw(10) << bike->endTime
+                        << std::setw(21) << bike->description << std::endl;
                order++;
                track.push_back(index);
             }
@@ -624,6 +631,7 @@ void System::rentMenu(){
                         << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
                         << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
                         << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
+                        << std::setw(10) << bike->startTime << std::setw(10) << bike->endTime
                         << std::setw(21) << bike->description << std::endl;
                order++;
                track.push_back(index);
@@ -641,6 +649,7 @@ void System::rentMenu(){
                          << std::setw(13) << bike->yearMade << std::setw(15) << bike->mode
                          << std::setw(13) << bike->location << std::setw(15) << bike->rentPrice
                          << std::setw(17) << bike->bikeRating << std::setw(21) << bike->memRating
+                         << std::setw(10) << bike->startTime << std::setw(10) << bike->endTime
                          << std::setw(21) << bike->description << std::endl;
                order++;
                track.push_back(index);
@@ -710,11 +719,12 @@ void System::addBike(){
    std::cout << "|                  -BIKE REGISTRATION-              |" << std::endl;
    std::cout << "=====================================================" << std::endl;
    std::cin.ignore();
-   
+
    std::string bikeid, model, color,
        enginesize, mode, yearmade,
        bikerating, rentprice, location,
-       memrating, status, description;
+       memrating, status, starttime, endtime,
+       description;
    bikeid = bikeIDGenerate();
 
    do {
@@ -792,8 +802,34 @@ void System::addBike(){
       std::cout << "=====================================================" << std::endl;
    } while (!isFloat(memrating));
 
-   status = BIKE_STATUS[1]; // status unavailable by default
-   
+   std::cout << "Bike availability: " << status << std::endl;
+   std::cout << "1. Unavailable.\n2. Available. " << status << std::endl;
+   int choice3 = menuChoice(1,2);
+   switch (choice3) {
+      case 1:  //unavailable
+         status = BIKE_STATUS[1]; // status unavailable by default
+         starttime = "null";
+         endtime = "null";
+         break;      
+      case 2:  //available
+         do {
+            do {
+               std::cout << "Format: DD/MM/YYYY. "<<std::endl;
+               std::cout << "Enter start date: ";
+               std::getline(std::cin, starttime);
+               std::cout << "=====================================================" << std::endl;
+         
+            } while (!isDateFormat(starttime));
+            do {
+               std::cout << "Format: DD/MM/YYYY. "<<std::endl;
+               std::cout << "Enter end date: ";
+               std::getline(std::cin, endtime);
+               std::cout << "=====================================================" << std::endl;
+            } while (!isDateFormat(endtime));
+         } while (duration(starttime, endtime) < 0);
+         break;
+   }
+
    do {
       std::cout << "Format: no certain symbol" << std::endl;
       std::cout << "Enter bike description: ";
@@ -804,7 +840,8 @@ void System::addBike(){
    MotorBike *bike = new MotorBike(bikeid, model, color,
                                    std::stoi(enginesize), mode, yearmade,
                                    std::stof(bikerating), std::stoi(rentprice), location,
-                                   std::stof(memrating), status, description);
+                                   std::stof(memrating), status, starttime, endtime, 
+                                   description);
    bikeVect.push_back(bike);
    currentMember->ownBikeID = bikeid;  //save bike id to member
    currentBike = bike;
@@ -818,6 +855,7 @@ void System::listBike(){
    std::cout << "List/Unlist motorbike." << std::endl;
    std::cout << "1. List bike for rent." << std::endl;
    std::cout << "2. Unlist bike." << std::endl;
+   std::string starttime, endtime;
    int choice = menuChoice(1,2);
    for (auto bike : bikeVect){
       if (bike->bikeID == currentMember->ownBikeID){
@@ -826,10 +864,27 @@ void System::listBike(){
    }
    switch (choice) {
       case 1:
-         currentBike->status = BIKE_STATUS[0]; // Available
+         currentBike->status = BIKE_STATUS[1]; // Unavailable
+         currentBike->startTime = "null";
+         currentBike->endTime = "null";
          break;
       case 2:
-         currentBike->status = BIKE_STATUS[1];  //Unavailable
+         currentBike->status = BIKE_STATUS[0];  //Available
+         do {
+            std::cout << "Format: DD/MM/YYYY. " << std::endl;
+            std::cout << "Enter start date: ";
+            std::getline(std::cin, starttime);
+            std::cout << "=====================================================" << std::endl;
+         } while (!isDateFormat(starttime));
+         do {
+            std::cout << "Format: DD/MM/YYYY. "<<std::endl;
+            std::cout << "Enter end date: ";
+            std::getline(std::cin, endtime);
+            std::cout << "=====================================================" << std::endl;
+         } while (!isDateFormat(endtime));
+         
+         currentBike->startTime = starttime;
+         currentBike->endTime = endtime;
          break;
    }
    std::cout << "=====================================================" << std::endl;
@@ -944,5 +999,18 @@ void System::bikeRevMenu(){
       case 2:
          memRevMenu();  
          break;
+   }
+}
+
+void System::bikeSttCheck(){
+   for (auto bike: bikeVect){
+      if ((duration (TODAY_DATE, bike->startTime) >=0) && (duration(bike->endTime, TODAY_DATE) >=0)){   //available? 
+         bike->status = BIKE_STATUS[0];   //available
+      } else {
+         bike->status = BIKE_STATUS[1]; //unavailable
+         bike->startTime = "null";  //reset value
+         bike->endTime = "null"; //reset value
+      }
+
    }
 }

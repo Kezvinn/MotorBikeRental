@@ -1,11 +1,11 @@
-Bk-113|Vision|Blue|125|Auto|2019|4.6|6|DN|6.8|Available|Good
-Bk-341|Future|Green|150|Manual|2020|8.4|7|HN|6.8|Available|Perfect
-Bk-908|Lead|Red|150|Auto|2019|7.5|6|SG|5.7|Available|Execelent
-Bk-342|FutureNeo|Black|200|Manual|2022|8.7|7|DN|6.8|Available|Perfect
-Bk-311|Future|Grey|125|Manual|2020|8.3|7|HN|6.1|Available|Real bad
-Bk-351|SH|Orange|200|Auto|2021|5.3|7|HN|6.4|Available|Bad
-Bk-125|Neo Future|Green|150|Manual|2020|8.9|7|SG|6.8|Available|Perfect
-Bk-323|Wave|Green|150|Manual|2020|8.9|7|DN|6.8|Available|bad
-Bk-681|newbike|red|200|Semi|2019|10|6|HN|6.7|Available|semi stable
-Bk-40|testbike|red|200|Auto|2013|10|7|DN|5.6|Available|bad bike
-Bk-205|khoibike|red|100|Auto|2020|10|5|HN|5|Available|newbike
+Bk-113|Vision|Blue|125|Auto|2019|4.6|6|DN|6.8|Available|10/12/2023|12/12/2023|Good
+Bk-341|Future|Green|150|Manual|2020|8.4|7|HN|6.8|Available|10/12/2023|12/12/2023|Perfect
+Bk-908|Lead|Red|150|Auto|2019|7.5|6|SG|5.7|Available|10/12/2023|12/12/2023|Execelent
+Bk-342|FutureNeo|Black|200|Manual|2022|8.7|7|DN|6.8|Available|10/12/2023|12/12/2023|Perfect
+Bk-311|Future|Grey|125|Manual|2020|8.3|7|HN|6.1|Available|10/12/2023|12/12/2023|Real bad
+Bk-351|SH|Orange|200|Auto|2021|5.3|7|HN|6.4|Available|10/12/2023|12/12/2023|Bad
+Bk-125|Neo Future|Green|150|Manual|2020|8.9|7|SG|6.8|Available|10/12/2023|12/12/2023|Perfect
+Bk-323|Wave|Green|150|Manual|2020|8.9|7|DN|6.8|Available|10/12/2023|12/12/2023|bad
+Bk-681|newbike|red|200|Semi|2019|10|6|HN|6.7|Available|10/12/2023|12/12/2023|semi stable
+Bk-40|testbike|red|200|Auto|2013|10|7|DN|5.6|Available|10/12/2023|12/12/2023|bad bike
+Bk-205|khoibike|red|100|Auto|2020|10|5|HN|5|Available|10/12/2023|12/12/2023|newbike

@@ -6,12 +6,12 @@ MotorBike::MotorBike(){
 MotorBike::MotorBike(std::string i_bikeID, std::string i_model, std::string i_color,
                      int i_engineSize, std::string i_mode, std::string i_yearMade,
                      float i_bikeRating, int i_rentPrice, std::string i_location,
-                     float i_memRating, std::string i_status,
+                     float i_memRating, std::string i_status, std::string i_starttime, std::string i_endtime,
                      std::string i_description)
     : bikeID(i_bikeID), model(i_model), color(i_color),
       engineSize(i_engineSize), mode(i_mode), yearMade(i_yearMade),
       bikeRating(i_bikeRating), rentPrice(i_rentPrice), location(i_location),
-      memRating(i_memRating), status(i_status),
+      memRating(i_memRating), status(i_status), startTime(i_starttime), endTime(i_endtime),
       description(i_description){};
 
 void MotorBike::showBikeInfo(){  //use to display after user added a new bike
@@ -21,6 +21,7 @@ void MotorBike::showBikeInfo(){  //use to display after user added a new bike
    std::cout << "- Year Made: " << yearMade << "\t\tLocation: " << location << std::endl;
    std::cout << "- Rent Price: " << rentPrice << " credits\t\tBike Rating: " << bikeRating << "/10"<<  std::endl;
    std::cout << "- Member Rating: " << memRating << "/10\t\tStatus: " << status << std::endl;
+   std::cout << "- Start date: " << startTime << "\t\tEnd date: " << endTime << std::endl;
    std::cout << "- Description: " << description << std::endl;
    std::cout << "=====================================================" << std::endl;
 }

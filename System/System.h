@@ -59,5 +59,8 @@ class System {
       //review menu
       void memRevMenu();   //6. review member
       void bikeRevMenu();  //7. review bike
+
+      void bikeSttCheck(); //check for current bike availability at given time
+
 };
 #endif
