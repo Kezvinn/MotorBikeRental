@@ -1,5 +1,5 @@
 #ifndef USER_H
-#define  USER_H
+#define USER_H
 #include <bits/stdc++.h>
 class User {
    private:
@@ -8,6 +8,7 @@ class User {
    public:
       User();
       User(std::string i_username, std::string i_password);
+      
       std::string get_username();
       std::string get_password();
 };
